@@ -1,0 +1,160 @@
+/* App-wide styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Main container */
+.min-h-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Content wrapper - contains sidebar and main content */
+.app-content-wrapper {
+  display: flex;
+  flex: 1;
+  position: relative;
+  padding-top: 64px; /* Height of the navigation bar */
+}
+
+/* Main content wrapper - contains main and footer */
+.main-content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 256px; /* Width of the sidebar */
+  transition: margin-left 0.3s ease;
+  width: calc(100% - 256px); /* Adjust width to account for sidebar */
+  padding-right: 0; /* Remove right padding */
+}
+
+/* When sidebar is closed */
+.sidebar-open .main-content-wrapper {
+  margin-left: 0;
+  width: 100%;
+}
+
+/* Main content area */
+main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-x: hidden; /* Prevent horizontal overflow */
+  box-sizing: border-box; /* Include padding in width calculation */
+  padding-left: 20px; /* Add left padding */
+  padding-right: 20px; /* Add equal right padding */
+}
+
+/* Navigation styles */
+.main-navigation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  z-index: 1000;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer styles */
+.site-footer {
+  flex-shrink: 0; /* Don't shrink */
+  width: 100%;
+  position: relative; /* Ensure it's in the normal flow */
+  z-index: 100; /* Above content but below navigation */
+  background-color: #1e3a8a;
+  color: #e2e8f0;
+}
+
+/* Sidebar styles */
+.site-sidebar {
+  position: fixed;
+  top: 64px; /* Height of the navigation bar */
+  left: 0;
+  bottom: 0;
+  width: 256px;
+  z-index: 900;
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+  background: linear-gradient(to bottom, #1e3a8a, #1e40af);
+  color: white;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-open .site-sidebar {
+  transform: translateX(-100%);
+}
+
+/* Sidebar backdrop */
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 800;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .app-content-wrapper {
+    padding-top: 56px; /* Height of the mobile navigation bar */
+  }
+
+  .main-content-wrapper {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  main {
+    padding-left: 15px; /* Smaller padding on mobile */
+    padding-right: 15px; /* Smaller padding on mobile */
+  }
+
+  .main-navigation {
+    height: 56px;
+  }
+
+  .site-sidebar {
+    top: 56px; /* Height of the mobile navigation bar */
+    transform: translateX(-100%);
+  }
+
+  .site-sidebar.open {
+    transform: translateX(0);
+  }
+}
+
+/* Utility classes */
+.flex-grow {
+  flex-grow: 1;
+}
+
+.min-h-screen {
+  min-height: 100vh;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.mobile {
+  /* Mobile-specific styles */
+}
+
+/* Ensure content doesn't overlap with footer */
+.home-container {
+  padding-bottom: 0;
+}

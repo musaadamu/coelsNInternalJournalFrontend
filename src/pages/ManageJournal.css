@@ -1,0 +1,293 @@
+/* ManageJournal.css */
+
+/* Container styling */
+.journal-management-container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Tab styling */
+.react-tabs {
+  width: 100%;
+}
+
+.react-tabs__tab-list {
+  display: flex;
+  border-bottom: 2px solid #e2e8f0;
+  margin: 0 0 20px;
+  padding: 0;
+}
+
+.react-tabs__tab {
+  padding: 12px 24px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #4a5568;
+  border-bottom: 3px solid transparent;
+  margin-right: 8px;
+  transition: all 0.3s ease;
+  border-radius: 4px 4px 0 0;
+}
+
+.react-tabs__tab:hover {
+  background-color: #f7fafc;
+  color: #2b6cb0;
+}
+
+.react-tabs__tab--selected {
+  color: #2b6cb0;
+  border-bottom: 3px solid #2b6cb0;
+  background-color: #ebf8ff;
+}
+
+.react-tabs__tab-panel {
+  display: none;
+  padding: 16px 0;
+}
+
+.react-tabs__tab-panel--selected {
+  display: block;
+}
+
+/* Section headers */
+.section-header {
+  position: relative;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.section-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 6px;
+}
+
+.section-header p {
+  color: #718096;
+  font-size: 0.85rem;
+}
+
+/* Card styling */
+.journal-card {
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 16px;
+  margin-bottom: 14px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.journal-card:hover {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.journal-card .title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 6px;
+}
+
+.journal-card .abstract {
+  color: #4a5568;
+  font-size: 0.85rem;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.journal-card .meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.journal-card .status {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.journal-card .status.published {
+  background-color: #c6f6d5;
+  color: #22543d;
+}
+
+.journal-card .status.submitted {
+  background-color: #feebc8;
+  color: #744210;
+}
+
+.journal-card .actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.journal-card .actions button {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.journal-card .actions .view-btn {
+  background-color: #4299e1;
+  color: white;
+}
+
+.journal-card .actions .view-btn:hover {
+  background-color: #3182ce;
+}
+
+.journal-card .actions .download-btn {
+  background-color: #48bb78;
+  color: white;
+}
+
+.journal-card .actions .download-btn:hover {
+  background-color: #38a169;
+}
+
+.journal-card .actions .delete-btn {
+  background-color: #f56565;
+  color: white;
+}
+
+.journal-card .actions .delete-btn:hover {
+  background-color: #e53e3e;
+}
+
+.journal-card .actions .publish-btn {
+  background-color: #805ad5;
+  color: white;
+}
+
+.journal-card .actions .publish-btn:hover {
+  background-color: #6b46c1;
+}
+
+/* Submission card styling */
+.submission-card {
+  background-color: #fffaf0;
+  border: 1px solid #fbd38d;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.submission-card:hover {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.submission-card .title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #744210;
+  margin-bottom: 6px;
+}
+
+.submission-card .abstract {
+  color: #4a5568;
+  font-size: 0.85rem;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.submission-card .keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.submission-card .keyword {
+  background-color: #edf2f7;
+  color: #4a5568;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+}
+
+.submission-card .authors {
+  margin-bottom: 16px;
+  font-size: 0.85rem;
+  color: #4a5568;
+}
+
+/* Button group styling */
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.button-group button {
+  font-size: 0.8rem;
+  padding: 5px 10px;
+}
+
+/* Loading and error states */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: #4a5568;
+  font-size: 1.1rem;
+}
+
+.error-message {
+  background-color: #fed7d7;
+  color: #c53030;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+/* Pagination styling */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.pagination button {
+  background-color: #edf2f7;
+  color: #4a5568;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #e2e8f0;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination .page-info {
+  font-size: 0.9rem;
+  color: #718096;
+}

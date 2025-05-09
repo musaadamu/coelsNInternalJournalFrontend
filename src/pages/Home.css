@@ -1,0 +1,938 @@
+/* Home.css - Comprehensive styling for the Sahara Journal homepage */
+
+/* General Resets and Base Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body, html {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  color: #333;
+  background-color: #f8f9fa;
+}
+
+/* Container Layout */
+.min-h-screen {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231e3a8a' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.03);
+}
+
+.main-container {
+  flex: 1;
+  position: relative;
+  transition: margin-left 0.3s ease;
+  width: 100%;
+  max-width: 100%;
+  margin-left: 0;
+  padding-left: 0;
+  padding-right: 0;
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+}
+
+.main-content {
+  width: 100%;
+  max-width: 1280px; /* Match the footer's max-width */
+  padding: 0 0 60px 0; /* Remove horizontal padding, keep bottom padding for footer space */
+  margin: 0 auto; /* Center the content */
+}
+
+/* Sidebar Styling */
+.site-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 250px;
+  background: linear-gradient(to bottom, #1e3a8a, #1e40af);
+  color: white;
+  z-index: 100;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+
+.right-margin {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 5px; /* Slim right margin */
+  background-color: #f8f9fa;
+  z-index: 50;
+}
+
+/* Fixed Scrollbar Styling */
+.fixed-scrollbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background: linear-gradient(to right, #1e3a8a, #2563eb);
+  overflow-x: auto;
+  z-index: 1000;
+  box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.fixed-scrollbar-content {
+  width: 200%; /* Extra width to ensure scrollability */
+  height: 100%;
+  padding: 8px;
+  color: white;
+  background: linear-gradient(90deg, rgba(30,58,138,0.7) 0%, rgba(37,99,235,0.7) 100%);
+}
+
+/* Enhanced Carousel Section - IMPORTANT FIX */
+.home-carousel-wrapper {
+  width: calc(100% - 40px); /* Account for the main content padding */
+  max-width: 1280px; /* Match the footer's max-width */
+  margin: 2rem auto; /* Center the carousel with top/bottom margin */
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+/* Bootstrap Carousel Critical Fixes */
+.carousel {
+  width: 100%;
+  max-height: 500px;
+  position: relative;
+}
+
+.carousel-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.carousel-item {
+  position: relative;
+  display: none;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.6s ease-in-out;
+  backface-visibility: hidden;
+}
+
+.carousel-item.active {
+  display: block;
+}
+
+.carousel-item img {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block; /* Ensure image displays as block */
+}
+
+.carousel-caption {
+  position: absolute;
+  right: 15%;
+  bottom: 40px;
+  left: 15%;
+  z-index: 10;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  color: #fff;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 8px;
+  padding: 15px;
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+.carousel-caption h5 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.carousel-caption p {
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 5%;
+  opacity: 0.8;
+  color: #fff;
+  text-align: center;
+  background: none;
+  border: 0;
+  transition: opacity 0.15s ease;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  opacity: 1;
+}
+
+.carousel-control-prev {
+  left: 0;
+}
+
+.carousel-control-next {
+  right: 0;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: 100% 100%;
+}
+
+.carousel-indicators {
+  position: absolute;
+  right: 0;
+  bottom: 20px;
+  left: 0;
+  z-index: 15;
+  display: flex;
+  justify-content: center;
+  padding-left: 0;
+  margin-right: 15%;
+  margin-left: 15%;
+  list-style: none;
+}
+
+.carousel-indicators li {
+  box-sizing: content-box;
+  flex: 0 1 auto;
+  width: 12px;
+  height: 12px;
+  margin-right: 3px;
+  margin-left: 3px;
+  text-indent: -999px;
+  cursor: pointer;
+  background-color: #fff;
+  background-clip: padding-box;
+  border-radius: 50%;
+  opacity: .5;
+  transition: opacity .6s ease;
+}
+
+.carousel-indicators .active {
+  opacity: 1;
+}
+
+/* ImprovedCarousel Component Specific Styles */
+.improved-carousel {
+  width: 100%;
+  max-width: 1280px; /* Match the footer's max-width */
+  margin: 0 auto;
+  position: relative;
+}
+
+.improved-carousel-title {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  font-size: 1.5rem;
+}
+
+/* Hero Section */
+header.bg-blue-900 {
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  padding: 5rem 1rem;
+  border-radius: 0 0 10px 10px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Welcome Header Section */
+.welcome-header {
+  text-align: center;
+  padding: 3.5rem 2.5rem;
+  max-width: 1280px; /* Match the footer's max-width */
+  margin: 0 auto 3rem auto;
+  width: calc(100% - 40px); /* Account for the main content padding */
+  background: linear-gradient(135deg, rgba(30, 58, 138, 0.95), rgba(37, 99, 235, 0.9));
+  border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(to right, #ffffff, #93c5fd, #ffffff);
+  z-index: 1;
+  opacity: 0.8;
+}
+
+.welcome-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.welcome-description {
+  font-size: 1.2rem;
+  color: #ffffff;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.submit-button {
+  display: inline-block;
+  background: linear-gradient(90deg, #1e3a8a, #2563eb, #3b82f6, #2563eb, #1e3a8a);
+  background-size: 300% 100%;
+  color: white;
+  padding: 0.85rem 1.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+}
+
+.submit-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  color: white;
+  background-position: 100% 0;
+  animation: gradientShift 3s ease infinite;
+}
+
+.submit-button:active {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+header h1 {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  letter-spacing: -0.5px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+header p {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  line-height: 1.6;
+  opacity: 0.95;
+  text-align: center;
+}
+
+header a {
+  transition: all 0.3s ease;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+header a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Featured Journals Section */
+section {
+  background-color: white;
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.98)),
+                    url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%231e3a8a' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+  border-radius: 12px;
+  margin: 2rem auto; /* Center horizontally with auto margins */
+  padding: 2.5rem;
+  width: calc(100% - 40px); /* Account for the main content padding */
+  max-width: 1280px; /* Match the footer's max-width */
+  box-sizing: border-box;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
+  text-align: center; /* Center text content */
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+/* View all link styling */
+.view-all-link {
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+section h2 {
+  position: relative;
+  padding-bottom: 15px;
+  margin-bottom: 30px;
+  text-align: center; /* Ensure headings are centered */
+}
+
+section h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(to right, #1e3a8a, #2563eb);
+}
+
+/* Links and Buttons */
+a {
+  color: #2563eb;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #1e40af;
+  text-decoration: underline;
+}
+
+.btn, button, [type="submit"] {
+  display: inline-block;
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn:hover, button:hover, [type="submit"]:hover {
+  background: #1e40af;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer Section */
+footer {
+  background: linear-gradient(to right, #1e3a8a, #1e40af);
+  color: white;
+  padding: 2rem 1rem;
+  margin-top: 3rem;
+  border-radius: 10px 10px 0 0;
+}
+
+footer a {
+  color: #d1d5db;
+}
+
+footer a:hover {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Journal List Component */
+.journal-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 2rem auto;
+  max-width: 1280px; /* Match the footer's max-width */
+  width: calc(100% - 40px); /* Account for the main content padding */
+}
+
+.journal-item {
+  background: white;
+  background-image: linear-gradient(to bottom, #ffffff, #f8fafc);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  transition: all 0.4s ease;
+  border: 1px solid rgba(226, 232, 240, 0.7);
+  position: relative;
+}
+
+.journal-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(to right, #1e3a8a, #3b82f6);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.journal-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.journal-item:hover::after {
+  transform: scaleX(1);
+}
+
+.journal-item img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.journal-item-content {
+  padding: 1.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.journal-item h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+  color: #1e3a8a;
+  font-weight: 700;
+  line-height: 1.4;
+  transition: color 0.3s ease;
+}
+
+.journal-item:hover h3 {
+  color: #2563eb;
+}
+
+.journal-item p {
+  color: #4b5563;
+  margin-bottom: 1.25rem;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.journal-item-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+/* Motion Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.8s ease forwards;
+}
+
+.slide-up {
+  animation: slideUp 0.8s ease forwards;
+}
+
+/* Apply animations to elements */
+.welcome-header {
+  animation: slideUp 1s ease-out;
+}
+
+.welcome-title {
+  animation: fadeIn 1.2s ease-out;
+}
+
+.welcome-description {
+  animation: fadeIn 1.5s ease-out;
+}
+
+.journal-item {
+  animation: fadeIn 0.6s ease-out;
+  animation-fill-mode: both;
+}
+
+.journal-list .journal-item:nth-child(1) { animation-delay: 0.1s; }
+.journal-list .journal-item:nth-child(2) { animation-delay: 0.2s; }
+.journal-list .journal-item:nth-child(3) { animation-delay: 0.3s; }
+.journal-list .journal-item:nth-child(4) { animation-delay: 0.4s; }
+.journal-list .journal-item:nth-child(5) { animation-delay: 0.5s; }
+.journal-list .journal-item:nth-child(6) { animation-delay: 0.6s; }
+
+/* Media Queries for Responsiveness */
+@media (max-width: 1280px) {
+  .home-carousel-wrapper,
+  .journal-list,
+  .welcome-header,
+  section,
+  .main-content,
+  .improved-carousel {
+    max-width: 95%;
+    width: calc(100% - 30px); /* Adjust for smaller padding on larger screens */
+  }
+}
+
+@media (max-width: 992px) {
+  .main-container {
+    margin-left: 0;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .main-content {
+    padding: 0 1.5rem 60px 1.5rem;
+  }
+
+  .site-sidebar {
+    width: 220px;
+  }
+
+  header h1 {
+    font-size: 2.5rem;
+  }
+
+  .carousel-item img {
+    height: 450px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-container {
+    margin-left: 0;
+    max-width: 100%;
+    width: 100%;
+    padding-left: 0; /* Remove space for collapsed sidebar */
+  }
+
+  .main-content {
+    padding: 0 0 60px 0;
+    max-width: 100%;
+  }
+
+  .site-sidebar {
+    width: 60px;
+  }
+
+  .home-carousel-wrapper,
+  .journal-list,
+  .welcome-header,
+  section {
+    width: calc(100% - 30px); /* Account for smaller padding on mobile */
+  }
+
+  .home-carousel-wrapper {
+    margin: 1rem auto; /* Smaller margin on mobile */
+  }
+
+  .carousel-item img {
+    height: 400px;
+  }
+
+  header h1 {
+    font-size: 2rem;
+  }
+
+  .journal-list {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  section {
+    padding: 1.5rem;
+    margin: 1.5rem auto;
+    max-width: 95%;
+  }
+}
+
+@media (max-width: 576px) {
+  .main-container {
+    padding-left: 0;
+  }
+
+  .main-content {
+    padding: 0 0 60px 0;
+  }
+
+  .site-sidebar {
+    width: 100%;
+    height: 60px;
+    bottom: 0;
+    top: auto;
+  }
+
+  .home-carousel-wrapper,
+  .journal-list,
+  .welcome-header,
+  section {
+    width: calc(100% - 20px); /* Account for even smaller padding on small mobile */
+  }
+
+  .home-carousel-wrapper {
+    margin: 0.75rem auto; /* Even smaller margin on small mobile */
+  }
+
+  .carousel-item img {
+    height: 300px;
+  }
+
+  header {
+    padding: 3rem 0;
+  }
+
+  header h1 {
+    font-size: 1.75rem;
+  }
+
+  section {
+    padding: 1.25rem;
+    margin: 1rem auto;
+    max-width: 95%;
+  }
+
+  .journal-list {
+    grid-template-columns: 1fr;
+  }
+
+  .fixed-scrollbar {
+    display: none; /* Hide on mobile */
+  }
+}
+
+/* Utility Classes */
+.text-center { text-align: center; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.font-bold { font-weight: 700; }
+.font-semibold { font-weight: 600; }
+.rounded-lg { border-radius: 0.5rem; }
+.shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+/* Featured Title Styles */
+.featured-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  color: #1e3a8a;
+
+}
+.welcome-description {
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto 2rem auto;
+  opacity: 0.95;
+  line-height: 1.6;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.submit-button {
+  display: inline-block;
+  background: #ffffff;
+  color: #1e3a8a;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  background: #f8f9fa;
+  color: #1e40af;
+  text-decoration: none;
+}
+
+/* Media queries for welcome section responsiveness */
+@media (max-width: 992px) {
+  .welcome-title {
+    font-size: 2rem;
+  }
+
+  .welcome-description {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .welcome-header {
+    padding: 4rem 1.5rem;
+  }
+
+  .welcome-title {
+    font-size: 1.8rem;
+  }
+
+  .welcome-description {
+    font-size: 1rem;
+  }
+
+  .submit-button {
+    padding: 10px 22px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .welcome-header {
+    padding: 3rem 1rem;
+  }
+
+  .welcome-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* Featured Publications Section Styles */
+section.py-10 {
+  background-color: white;
+  border-radius: 8px;
+  margin: 2rem auto;
+  padding: 2.5rem 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  max-width: 1280px; /* Match the footer's max-width */
+  width: calc(100% - 40px); /* Account for the main content padding */
+}
+
+section.py-10 h2 {
+  position: relative;
+  color: #1e3a8a;
+  padding-bottom: 15px;
+  margin-bottom: 30px;
+}
+
+section.py-10 h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(to right, #1e3a8a, #2563eb);
+}
+
+section.py-10 .mt-4 {
+  margin-top: 1.5rem;
+}
+
+section.py-10 .text-blue-600 {
+  color: #2563eb;
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+}
+
+section.py-10 .text-blue-600:hover {
+  color: #1e40af;
+  transform: translateY(-2px);
+}
+
+section.py-10 .text-blue-600:after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: #1e40af;
+  transform: translateX(-50%);
+  transition: width 0.3s ease;
+}
+
+section.py-10 .text-blue-600:hover:after {
+  width: 80%;
+}
+
+/* Media queries for featured section responsiveness */
+@media (max-width: 768px) {
+  section.py-10 {
+    padding: 2rem 0.5rem;
+    margin: 1.5rem 0.75rem;
+  }
+
+  section.py-10 h2 {
+    font-size: 1.75rem;
+    padding-bottom: 12px;
+    margin-bottom: 25px;
+  }
+
+  section.py-10 h2::after {
+    width: 80px;
+    height: 2px;
+  }
+}
+
+@media (max-width: 576px) {
+  section.py-10 {
+    padding: 1.5rem 0.5rem;
+    margin: 1rem 0.5rem;
+  }
+
+  section.py-10 h2 {
+    font-size: 1.5rem;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+
+  section.py-10 h2::after {
+    width: 60px;
+  }
+}
