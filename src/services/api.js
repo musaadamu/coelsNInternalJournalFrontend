@@ -4,7 +4,7 @@ import axios from 'axios';
 const getBaseUrl = () => {
   // For production (Vercel deployment)
   if (process.env.NODE_ENV === 'production') {
-    return 'https://saharabackend-v190.onrender.com/api';
+    return 'https://coelsn-backend.onrender.com/api';
   }
   // For local development
   return process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
@@ -15,7 +15,7 @@ const apiBaseUrl = getBaseUrl();
 console.log('API Base URL:', apiBaseUrl);
 
 // Add a function to check if we're using the production API
-export const isProduction = () => apiBaseUrl.includes('saharabackend-v190.onrender.com');
+export const isProduction = () => apiBaseUrl.includes('coelsn-backend.onrender.com');
 
 // Create axios instance with base URL
 const api = axios.create({
@@ -157,7 +157,7 @@ api.journals = {
 
     // Determine the correct base URL based on environment
     const baseUrl = process.env.NODE_ENV === 'production'
-      ? 'https://saharabackend-v190.onrender.com'
+      ? 'https://coelsn-backend.onrender.com'
       : 'http://localhost:5000';
 
     console.log('Using base URL for download:', baseUrl);
@@ -208,7 +208,7 @@ api.journals = {
   upload: async (formData) => {
     // Determine the correct base URL based on environment
     const baseUrl = process.env.NODE_ENV === 'production'
-      ? 'https://saharabackend-v190.onrender.com'
+      ? 'https://coelsn-backend.onrender.com'
       : 'http://localhost:5000';
 
     console.log('Using base URL for upload:', baseUrl);
@@ -241,7 +241,7 @@ api.submissions = {
 
     // Determine the correct base URL based on environment
     const baseUrl = process.env.NODE_ENV === 'production'
-      ? 'https://saharabackend-v190.onrender.com'
+      ? 'https://coelsn-backend.onrender.com'
       : 'http://localhost:5000';
 
     console.log('Using base URL for submission download:', baseUrl);

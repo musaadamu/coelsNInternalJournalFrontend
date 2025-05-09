@@ -100,7 +100,7 @@ const JournalList = () => {
 
             // Get the backend URL
             const backendUrl = isProduction
-                ? 'https://saharabackend-v190.onrender.com'
+                ? 'https://coelsn-backend.onrender.com'
                 : 'http://localhost:5000';
 
             console.log('Environment:', { isProduction, NODE_ENV: process.env.NODE_ENV });
@@ -141,7 +141,7 @@ const JournalList = () => {
                                 try {
                                     console.log('Using direct download endpoint for PDF');
                                     // Make sure we're using the correct base URL
-                                    const baseUrl = api.defaults.baseURL || 'https://saharabackend-v190.onrender.com/api';
+                                    const baseUrl = api.defaults.baseURL || 'https://coelsn-backend.onrender.com/api';
 
                                     // Create the direct download URL
                                     const downloadUrl = `${baseUrl}/journals/${id}/direct-download/pdf`;
@@ -186,7 +186,7 @@ const JournalList = () => {
                                 try {
                                     console.log('Using direct download endpoint for DOCX');
                                     // Make sure we're using the correct base URL
-                                    const baseUrl = api.defaults.baseURL || 'https://saharabackend-v190.onrender.com/api';
+                                    const baseUrl = api.defaults.baseURL || 'https://coelsn-backend.onrender.com/api';
 
                                     // Create the direct download URL
                                     const downloadUrl = `${baseUrl}/journals/${id}/direct-download/docx`;
@@ -298,7 +298,7 @@ const JournalList = () => {
                 if (isProduction) {
                 // For production (Render backend)
                 // Primary API endpoint - this is the path that works locally
-                urlsToTry.push(`https://saharabackend-v190.onrender.com/api/journals/${id}/download/${fileType}`);
+                urlsToTry.push(`https://coelsn-backend.onrender.com/api/journals/${id}/download/${fileType}`);
 
                 // Removed fallback without /api prefix to avoid deployment issues
                 // urlsToTry.push(`https://saharabackend-v190.onrender.com/journals/${id}/download/${fileType}`);

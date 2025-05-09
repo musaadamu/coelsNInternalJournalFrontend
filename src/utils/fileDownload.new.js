@@ -39,7 +39,7 @@ export const downloadFile = async (url, filename, fileType) => {
         }
 
         // For Render backend, ensure we're not sending credentials
-        const isRenderBackend = url.includes('saharabackend-v190.onrender.com');
+        const isRenderBackend = url.includes('coelsn-backend.onrender.com');
         const isDirectFileEndpoint = url.includes('/direct-file/');
 
         console.log('Request headers:', headers);
@@ -170,7 +170,7 @@ export const downloadJournalFile = async (baseUrl, journalId, fileType, title) =
 
     // Clean the base URL to get the backend root
     const backendRoot = baseUrl.replace('/api', '');
-    const backendUrl = isProduction ? 'https://saharabackend-v190.onrender.com' : 'http://localhost:5000';
+    const backendUrl = isProduction ? 'https://coelsn-backend.onrender.com' : 'http://localhost:5000';
 
     // Determine if we're running locally or accessing the deployed backend
     const isLocalBackend = window.location.hostname === 'localhost';
@@ -189,9 +189,9 @@ export const downloadJournalFile = async (baseUrl, journalId, fileType, title) =
         // For production (Render backend)
         urlsToTry.push(
             // Direct file endpoint first (more reliable on Render)
-            `https://saharabackend-v190.onrender.com/direct-file/journals/${journalId}.${fileType}`,
+            `https://coelsn-backend.onrender.com/direct-file/journals/${journalId}.${fileType}`,
             // Then try the API endpoint
-            `https://saharabackend-v190.onrender.com/api/journals/${journalId}/download/${fileType}`
+            `https://coelsn-backend.onrender.com/api/journals/${journalId}/download/${fileType}`
         );
     } else {
         // For local development
