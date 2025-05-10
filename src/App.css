@@ -2,24 +2,55 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   overflow-x: hidden; /* Prevent horizontal scrolling */
+  color: #333;
+  background-color: #1a365d; /* Match footer bottom color */
 }
 
-/* Main container */
-.min-h-screen {
+/* Application container */
+.app-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
-/* Content wrapper - contains sidebar and main content */
-.app-content-wrapper {
+/* Layout container - handles the positioning of all elements */
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Navigation container - constrains navigation width */
+.nav-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  padding: 0 20px; /* Side margin */
+}
+
+/* Content area - contains sidebar and main content */
+.content-area {
   display: flex;
   flex: 1;
   position: relative;
-  padding-top: 64px; /* Height of the navigation bar */
+  margin-top: 80px; /* Height of the navigation bar */
+  min-height: calc(100vh - 80px); /* Full height minus nav */
+}
+
+/* When sidebar is open - adjust nav container */
+.layout-container.sidebar-open .nav-container {
+  left: 280px; /* Width of sidebar */
+  width: calc(100% - 280px - 40px); /* Full width minus sidebar minus padding */
+  margin: 0 auto;
 }
 
 /* Main content wrapper - contains main and footer */
@@ -27,69 +58,52 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-left: 256px; /* Width of the sidebar */
-  transition: margin-left 0.3s ease;
-  width: calc(100% - 256px); /* Adjust width to account for sidebar */
-  padding-right: 0; /* Remove right padding */
+  margin-left: 0; /* Default: no sidebar */
+  transition: margin-left 0.3s ease, width 0.3s ease;
+  width: 100%;
+  background-color: #fff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
 }
 
-/* When sidebar is closed */
-.sidebar-open .main-content-wrapper {
-  margin-left: 0;
-  width: 100%;
+/* When sidebar is open */
+.layout-container.sidebar-open .main-content-wrapper {
+  margin-left: 280px; /* Width of the sidebar */
+  width: calc(100% - 290px); /* Slightly increased width with reduced margin */
+  margin-right: 10px; /* Reduced margin on the opposite side */
 }
 
 /* Main content area */
 main {
-  flex-grow: 1;
+  flex: 1;
   display: flex;
   flex-direction: column;
   width: 100%;
   overflow-x: hidden; /* Prevent horizontal overflow */
   box-sizing: border-box; /* Include padding in width calculation */
-  padding-left: 20px; /* Add left padding */
-  padding-right: 20px; /* Add equal right padding */
-}
-
-/* Navigation styles */
-.main-navigation {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 64px;
-  z-index: 1000;
+  padding: 30px; /* Add padding all around */
   background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Footer styles */
-.site-footer {
-  flex-shrink: 0; /* Don't shrink */
-  width: 100%;
-  position: relative; /* Ensure it's in the normal flow */
-  z-index: 100; /* Above content but below navigation */
-  background-color: #1e3a8a;
-  color: #e2e8f0;
 }
 
 /* Sidebar styles */
 .site-sidebar {
   position: fixed;
-  top: 64px; /* Height of the navigation bar */
-  left: 0;
+  top: 0; /* Start from the very top */
+  left: -280px; /* Start off-screen, match sidebar width */
   bottom: 0;
-  width: 256px;
-  z-index: 900;
-  transform: translateX(0);
-  transition: transform 0.3s ease;
-  background: linear-gradient(to bottom, #1e3a8a, #1e40af);
-  color: white;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  width: 280px;
+  z-index: 1100; /* Higher than nav to show sidebar above nav */
+  transition: left 0.3s ease;
+  background: #ffffff;
+  color: #333;
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.08);
+  border-right: 1px solid #f0f0f0;
+  padding-top: 80px; /* Account for navbar height */
 }
 
-.sidebar-open .site-sidebar {
-  transform: translateX(-100%);
+.site-sidebar.open {
+  left: 0; /* Move on-screen when open */
 }
 
 /* Sidebar backdrop */
@@ -100,37 +114,84 @@ main {
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 800;
+  z-index: 1000; /* Just below sidebar */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.layout-container.sidebar-open .sidebar-backdrop {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Footer adjustments */
+.site-footer {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
+  transition: width 0.3s ease, margin-left 0.3s ease;
+}
+
+/* Ensure footer aligns with content width */
+.layout-container.sidebar-open .site-footer {
+  width: calc(100% - 290px);
+  margin-left: 280px;
+  margin-right: 10px;
+}
+
+/* Scrolled state adjustments */
+.modern-navigation.scrolled ~ .content-area {
+  margin-top: 60px; /* Height of the scrolled navigation bar */
+}
+
+.modern-navigation.scrolled ~ .site-sidebar {
+  padding-top: 60px; /* Adjust for smaller nav height */
 }
 
 /* Responsive adjustments */
-@media (max-width: 767px) {
-  .app-content-wrapper {
-    padding-top: 56px; /* Height of the mobile navigation bar */
+@media (max-width: 768px) {
+  .content-area {
+    margin-top: 60px; /* Height of the mobile navigation bar */
+  }
+
+  .nav-container {
+    padding: 0 10px; /* Smaller side margin on mobile */
+  }
+
+  .layout-container.sidebar-open .nav-container {
+    left: 0;
+    width: 100%;
   }
 
   .main-content-wrapper {
     margin-left: 0;
     width: 100%;
+    border-radius: 0;
+  }
+
+  /* Reset footer width and margin on mobile */
+  .layout-container.sidebar-open .site-footer {
+    width: 100%;
+    margin-left: 0;
   }
 
   main {
-    padding-left: 15px; /* Smaller padding on mobile */
-    padding-right: 15px; /* Smaller padding on mobile */
-  }
-
-  .main-navigation {
-    height: 56px;
+    padding: 20px; /* Smaller padding on mobile */
   }
 
   .site-sidebar {
-    top: 56px; /* Height of the mobile navigation bar */
-    transform: translateX(-100%);
+    top: 0;
+    padding-top: 60px; /* Adjust for mobile nav height */
+    z-index: 1200; /* Ensure it's above everything on mobile */
   }
+}
 
-  .site-sidebar.open {
-    transform: translateX(0);
-  }
+/* Toast Container Adjustments */
+.Toastify__toast-container {
+  z-index: 9999;
+  position: fixed;
 }
 
 /* Utility classes */
@@ -148,13 +209,4 @@ main {
 
 .flex-col {
   flex-direction: column;
-}
-
-.mobile {
-  /* Mobile-specific styles */
-}
-
-/* Ensure content doesn't overlap with footer */
-.home-container {
-  padding-bottom: 0;
 }

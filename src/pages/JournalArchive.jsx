@@ -1,0 +1,236 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import api from '../services/api';
+import Navigation from '../components/Navigation.jsx';
+
+const JournalArchive = () => {
+    const navigate = useNavigate();
+    const [journals, setJournals] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredJournals, setFilteredJournals] = useState([]);
+    const [sortConfig, setSortConfig] = useState({ key: 'createdAt', direction: 'desc' });
+    const [filter, setFilter] = useState('all');
+    const [yearFilter, setYearFilter] = useState('all');
+    const [availableYears, setAvailableYears] = useState([]);
+
+    useEffect(() => {
+        fetchJournals();
+    }, []);
+
+    useEffect(() => {
+        // Filter and sort journals whenever journals, searchTerm, sortConfig, filter, or yearFilter changes
+        let result = [...journals];
+        
+        // Extract all available years from journal dates
+        if (journals.length > 0) {
+            const years = [...new Set(journals.map(journal => 
+                new Date(journal.createdAt).getFullYear()
+            ))].sort((a, b) => b - a); // Sort years in descending order
+            
+            setAvailableYears(years);
+        }
+        
+        // Apply status filter
+        if (filter !== 'all') {
+            result = result.filter(journal => journal.status === filter);
+        }
+        
+        // Apply year filter
+        if (yearFilter !== 'all') {
+            result = result.filter(journal => 
+                new Date(journal.createdAt).getFullYear() === parseInt(yearFilter)
+            );
+        }
+        
+        // Apply search filter
+        if (searchTerm) {
+            result = result.filter(journal => 
+                journal.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                journal.abstract.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (journal.authors && journal.authors.some(author => 
+                    author.toLowerCase().includes(searchTerm.toLowerCase())
+                ))
+            );
+        }
+        
+        // Apply sorting
+        if (sortConfig.key) {
+            result.sort((a, b) => {
+                if (a[sortConfig.key] < b[sortConfig.key]) {
+                    return sortConfig.direction === 'asc' ? -1 : 1;
+                }
+                if (a[sortConfig.key] > b[sortConfig.key]) {
+                    return sortConfig.direction === 'asc' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+        
+        setFilteredJournals(result);
+    }, [journals, searchTerm, sortConfig, filter, yearFilter]);
+
+    const fetchJournals = async () => {
+        setLoading(true);
+        try {
+            const response = await api.journals.getAll();
+            setJournals(response.data);
+        } catch (err) {
+            console.error('Error fetching journals:', err);
+            setError('Failed to load journals. Please try again later.');
+            toast.error('Failed to load journals');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSort = (key) => {
+        let direction = 'asc';
+        if (sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setSortConfig({ key, direction });
+    };
+
+    const handleDownload = async (id, fileType) => {
+        try {
+            const toastId = toast.loading(`Preparing ${fileType.toUpperCase()} download...`);
+            
+            // Get the base URL
+            const baseUrl = api.defaults.baseURL || 'https://coelsn-backend.onrender.com/api';
+            
+            // Create the direct download URL
+            const downloadUrl = `${baseUrl}/journals/${id}/direct-download/${fileType}`;
+            
+            // Open the URL in a new tab
+            window.open(downloadUrl, '_blank');
+            
+            toast.dismiss(toastId);
+            toast.success(`Opening ${fileType.toUpperCase()} file in new tab`);
+        } catch (error) {
+            console.error('Download error:', error);
+            toast.error(`Error downloading file: ${error.message}`);
+        }
+    };
+
+    if (loading) return <div className="text-center py-10">Loading journals...</div>;
+
+    return (
+        <div className="min-h-screen bg-gray-50">
+            <Navigation />
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                <h1 className="text-2xl font-bold text-gray-900 mb-6">Journal Archive</h1>
+                
+                {error && (
+                    <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
+                        <p>{error}</p>
+                    </div>
+                )}
+                
+                <div className="bg-white shadow-md rounded-lg overflow-hidden">
+                    <div className="p-4 border-b border-gray-200 bg-gray-50 flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+                        <div className="flex flex-wrap items-center gap-4">
+                            <select 
+                                value={filter} 
+                                onChange={(e) => setFilter(e.target.value)}
+                                className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            >
+                                <option value="all">All Status</option>
+                                <option value="Published">Published</option>
+                                <option value="Draft">Draft</option>
+                            </select>
+                            
+                            <select 
+                                value={yearFilter} 
+                                onChange={(e) => setYearFilter(e.target.value)}
+                                className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            >
+                                <option value="all">All Years</option>
+                                {availableYears.map(year => (
+                                    <option key={year} value={year}>{year}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="w-full sm:w-auto">
+                            <input 
+                                type="text" 
+                                placeholder="Search journals..." 
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            />
+                        </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+                        {filteredJournals.length === 0 ? (
+                            <div className="col-span-full text-center py-10 text-gray-500">
+                                No journals found matching your criteria
+                            </div>
+                        ) : (
+                            filteredJournals.map(journal => (
+                                <div key={journal._id} className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                                    <div className="p-4">
+                                        <h2 
+                                            className="text-lg font-semibold text-blue-600 cursor-pointer hover:underline mb-2"
+                                            onClick={() => navigate(`/journals/${journal._id}`)}
+                                        >
+                                            {journal.title}
+                                        </h2>
+                                        
+                                        <p className="text-sm text-gray-600 mb-3 line-clamp-3">
+                                            {journal.abstract}
+                                        </p>
+                                        
+                                        <div className="flex items-center text-sm text-gray-500 mb-3">
+                                            <span className="mr-2">Authors:</span>
+                                            <span className="font-medium">
+                                                {journal.authors ? journal.authors.join(', ') : 'Unknown'}
+                                            </span>
+                                        </div>
+                                        
+                                        <div className="flex items-center justify-between mb-3">
+                                            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                                                journal.status === 'Published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                                            }`}>
+                                                {journal.status || 'Draft'}
+                                            </span>
+                                            <span className="text-xs text-gray-500">
+                                                {new Date(journal.createdAt).toLocaleDateString()}
+                                            </span>
+                                        </div>
+                                        
+                                        <div className="flex flex-wrap gap-2 mt-4">
+                                            <button
+                                                onClick={() => navigate(`/journals/${journal._id}`)}
+                                                className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+                                            >
+                                                View
+                                            </button>
+                                            <button
+                                                onClick={() => handleDownload(journal._id, 'pdf')}
+                                                className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors"
+                                            >
+                                                PDF
+                                            </button>
+                                            <button
+                                                onClick={() => handleDownload(journal._id, 'docx')}
+                                                className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+                                            >
+                                                DOCX
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default JournalArchive;

@@ -1,29 +1,32 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import LoginPage from "./pages/LoginPage";
-import Register from "./pages/Register";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-import Dashboard from "./pages/Dashboard";
-import UpdateProfilePage from "./pages/UpdateProfilePage";
-import NotFound from "./pages/NotFound";
-import Unauthorized from "./pages/Unauthorized";
-import ProtectedRoute from "./components/ProtectedRoute";
-import JournalUpload from './components/JournalUpload';
-import JournalList from './components/JournalList';
-import JournalDetail from './components/JournalDetail';
-import Home from "./pages/Home";
-import ManageJournal from "./pages/ManageJournal";
-import LogoutPage from "./pages/LogoutPage";
-import JournalArchive from "./pages/JournalArchive";
-import JournalSubmission from "./components/JournalSubmission";
-import Navigation from "./components/Navigation";
-import About from "./components/About";
-import Guide from "./components/Guide";
-import Contact from "./components/Contact";
-import Footer from "./components/Footer";
-import Sidebar from "./components/Sidebar";
+import LoginPage from "./pages/LoginPage.jsx";
+import Register from "./pages/Register.jsx";
+import ForgotPassword from "./pages/ForgotPassword.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import UpdateProfilePage from "./pages/UpdateProfilePage.jsx";
+import NotFound from "./pages/NotFound.jsx";
+import Unauthorized from "./pages/Unauthorized.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import JournalUpload from './components/JournalUpload.jsx';
+import JournalList from './components/JournalList.jsx';
+import JournalDetail from './components/JournalDetail.jsx';
+import Home from "./pages/Home.jsx";
+import ManageJournal from "./pages/ManageJournal.jsx";
+import LogoutPage from "./pages/LogoutPage.jsx";
+import JournalArchive from "./pages/JournalArchive.jsx";
+import JournalSubmission from "./components/JournalSubmission.jsx";
+import Navigation from "./components/Navigation.jsx";
+import About from "./components/About.jsx";
+import Guide from "./components/Guide.jsx";
+import Contact from "./components/Contact.jsx";
+import Footer from "./components/Footer.jsx";
+import Sidebar from "./components/Sidebar.jsx";
+import TestComponent from "./components/TestComponent.jsx";
 
 function App() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -55,80 +58,90 @@ function App() {
 
     return (
         <Router>
-            <div className="min-h-screen flex flex-col">
-                {/* Navigation appears on every page */}
-                <Navigation user={user} toggleSidebar={toggleSidebar} />
+            <div className="app-container min-h-screen">
+                {/* Overall layout container */}
+                <div className={`layout-container ${sidebarOpen ? 'sidebar-open' : ''} ${isMobile ? 'mobile' : ''}`}>
+                    {/* Navigation bar contained within layout */}
+                    <div className="nav-container">
+                        <Navigation user={user} toggleSidebar={toggleSidebar} />
+                    </div>
 
-                <div className={`app-content-wrapper flex flex-1 ${sidebarOpen ? 'sidebar-open' : ''} ${isMobile ? 'mobile' : ''}`}>
-                    {/* Sidebar component */}
-                    <Sidebar
-                        className={`site-sidebar ${sidebarOpen ? 'open' : ''}`}
-                        onClose={() => setSidebarOpen(false)}
-                    />
-
-                    {/* Backdrop overlay for mobile when sidebar is open */}
-                    {isMobile && sidebarOpen && (
-                        <div
-                            className="sidebar-backdrop"
-                            onClick={() => setSidebarOpen(false)}
+                    {/* Content area - sidebar and main content */}
+                    <div className="content-area">
+                        {/* Sidebar component */}
+                        <Sidebar
+                            className={`site-sidebar ${sidebarOpen ? 'open' : ''}`}
+                            onClose={() => setSidebarOpen(false)}
                         />
-                    )}
 
-                    {/* Main content area with footer */}
-                    <div className="main-content-wrapper flex flex-col flex-1">
-                        <main className="flex-grow">
-                            <Routes>
-                                {/* Public Routes */}
-                                <Route path="/" element={<Home />} />
-                                <Route path="/logout" element={<LogoutPage />} />
-                                <Route path="/login" element={<LoginPage />} />
-                                <Route path="/register" element={<Register />} />
-                                <Route path="/forgotpassword" element={<ForgotPassword />} />
-                                <Route path="/resetpassword/:token" element={<ResetPassword />} />
-                                <Route path="/about" element={<About />} />
-                                <Route path="/guide" element={<Guide />} />
-                                <Route path="/contact" element={<Contact />} />
-                                <Route path="/journals" element={<JournalList />} />
-                                <Route path="/journals/:id" element={<JournalDetail />} />
-                                <Route path="/archive" element={<JournalArchive />} />
-                                <Route path="/unauthorized" element={<Unauthorized />} />
+                        {/* Backdrop overlay for mobile */}
+                        {isMobile && sidebarOpen && (
+                            <div
+                                className="sidebar-backdrop"
+                                onClick={() => setSidebarOpen(false)}
+                            />
+                        )}
 
-                                {/* Protected Routes - Only require login, not admin */}
-                                <Route path="/dashboard" element={
-                                    <ProtectedRoute allowedRoles={["admin", "author", "user"]}>
-                                        <Dashboard />
-                                    </ProtectedRoute>
-                                } />
-                                <Route path="/updateprofile" element={
-                                    <ProtectedRoute allowedRoles={["admin", "author", "user"]}>
-                                        <UpdateProfilePage />
-                                    </ProtectedRoute>
-                                } />
-                                <Route path="/submission" element={
-                                    <ProtectedRoute allowedRoles={["admin", "author", "user"]}>
-                                        <JournalSubmission />
-                                    </ProtectedRoute>
-                                } />
+                        {/* Main content wrapper */}
+                        <div className="main-content-wrapper">
+                            <main className="flex-grow">
+                                <Routes>
+                                    {/* Public Routes */}
+                                    <Route path="/" element={<Home />} />
+                                    <Route path="/logout" element={<LogoutPage />} />
+                                    <Route path="/login" element={<LoginPage />} />
+                                    <Route path="/register" element={<Register />} />
+                                    <Route path="/forgotpassword" element={<ForgotPassword />} />
+                                    <Route path="/resetpassword/:token" element={<ResetPassword />} />
+                                    <Route path="/about" element={<About />} />
+                                    <Route path="/guide" element={<Guide />} />
+                                    <Route path="/contact" element={<Contact />} />
+                                    <Route path="/journals" element={<JournalList />} />
+                                    <Route path="/journals/:id" element={<JournalDetail />} />
+                                    <Route path="/archive" element={<JournalArchive />} />
+                                    <Route path="/unauthorized" element={<Unauthorized />} />
+                                    <Route path="/test" element={<TestComponent />} />
 
-                                {/* Admin-only Routes - Only accessible to admin users */}
-                                <Route path="/journals/uploads" element={
-                                    <ProtectedRoute allowedRoles={["admin"]}>
-                                        <JournalUpload />
-                                    </ProtectedRoute>
-                                } />
-                                <Route path="/manage-journals" element={
-                                    <ProtectedRoute allowedRoles={["admin"]}>
-                                        <ManageJournal />
-                                    </ProtectedRoute>
-                                } />
+                                    {/* Protected Routes - Only require login, not admin */}
+                                    <Route path="/dashboard" element={
+                                        <ProtectedRoute allowedRoles={["admin", "author", "user"]}>
+                                            <Dashboard />
+                                        </ProtectedRoute>
+                                    } />
+                                    <Route path="/updateprofile" element={
+                                        <ProtectedRoute allowedRoles={["admin", "author", "user"]}>
+                                            <UpdateProfilePage />
+                                        </ProtectedRoute>
+                                    } />
+                                    <Route path="/submission" element={
+                                        <ProtectedRoute allowedRoles={["admin", "author", "user"]}>
+                                            <JournalSubmission />
+                                        </ProtectedRoute>
+                                    } />
 
-                                {/* Not Found Route */}
-                                <Route path="*" element={<NotFound />} />
-                            </Routes>
-                        </main>
+                                    {/* Admin-only Routes - Only accessible to admin users */}
+                                    <Route path="/journals/uploads" element={
+                                        <ProtectedRoute allowedRoles={["admin"]}>
+                                            <JournalUpload />
+                                        </ProtectedRoute>
+                                    } />
+                                    <Route path="/manage-journals" element={
+                                        <ProtectedRoute allowedRoles={["admin"]}>
+                                            <ManageJournal />
+                                        </ProtectedRoute>
+                                    } />
 
-                        {/* Footer inside the main content wrapper */}
-                        <Footer />
+                                    {/* Not Found Route */}
+                                    <Route path="*" element={<NotFound />} />
+                                </Routes>
+                            </main>
+
+                            {/* Footer - direct child of main-content-wrapper */}
+                            <Footer />
+
+                            {/* Toast notifications */}
+                            <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
+                        </div>
                     </div>
                 </div>
             </div>

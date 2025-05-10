@@ -1,59 +1,129 @@
-/* Sidebar.css */
+/* Modern Professional Sidebar */
 .sidebar {
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
-  width: 250px;
-  min-width: 250px;
-  max-width: 250px;
-  background-color: #1e3a8a;
-  color: #ffffff;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  z-index: 50;
+  width: 280px;
+  min-width: 280px;
+  max-width: 280px;
+  background: #1a365d;
+  color: #fff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Sidebar content - scrollable area */
+.sidebar-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
-  transition: transform 0.3s ease;
-  box-sizing: border-box;
-  border-right: none;
-  margin-right: 0;
-  padding-right: 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.sidebar-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-content::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
 }
 
 /* Sidebar Header */
 .sidebar-header {
-  padding: 1.5rem 1rem;
+  padding: 1.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  background: rgba(0, 0, 0, 0.1);
+  z-index: 2;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar-header-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
+
+/* Sidebar Branding (Logo and Title) */
+.sidebar-branding {
+  padding: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, #0f2942, #1a365d);
+  margin-top: auto;
 }
 
 .sidebar-logo {
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: #ffffff;
+  color: #2a4365;
+  transition: all 0.3s ease;
+}
+
+.sidebar-logo:hover {
+  opacity: 0.9;
 }
 
 .sidebar-logo-img {
-  width: 40px;
-  height: 40px;
-  margin-right: 10px;
-  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  margin-right: 12px;
+  border-radius: 8px;
   object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-logo:hover .sidebar-logo-img {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.sidebar-title-container {
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar-title {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 700;
   margin: 0;
-  white-space: nowrap;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.sidebar-subtitle {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  font-weight: 400;
 }
 
 /* Sidebar Navigation */
 .sidebar-nav {
   flex: 1;
-  padding: 1rem 0;
+  padding: 1.5rem 0;
 }
 
 .sidebar-menu {
@@ -63,54 +133,87 @@
 }
 
 .sidebar-menu-item {
-  margin-bottom: 0.25rem;
+  margin-bottom: 2px;
+  position: relative;
 }
 
 .sidebar-menu-link {
   display: flex;
   align-items: center;
-  padding: 0.75rem 1.5rem;
+  padding: 0.85rem 1.5rem;
   color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  border-radius: 0;
+  position: relative;
+  font-weight: 500;
+  letter-spacing: 0.2px;
   border-left: 3px solid transparent;
 }
 
 .sidebar-menu-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
   color: #ffffff;
-  border-left-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .sidebar-menu-link.active {
-  background-color: rgba(255, 255, 255, 0.15);
   color: #ffffff;
-  border-left-color: #f59e0b;
+  background-color: rgba(99, 179, 237, 0.2);
   font-weight: 600;
+  border-left: 3px solid #63b3ed;
 }
 
 .sidebar-icon {
   width: 20px;
-  margin-right: 10px;
+  margin-right: 12px;
   text-align: center;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease;
+}
+
+.sidebar-menu-link:hover .sidebar-icon {
+  color: #ffffff;
+  transform: translateX(2px);
+}
+
+.sidebar-menu-link.active .sidebar-icon {
+  color: #63b3ed;
 }
 
 .sidebar-menu-divider {
-  padding: 0.5rem 1.5rem;
+  padding: 1.25rem 1.5rem 0.5rem;
   font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   color: rgba(255, 255, 255, 0.5);
-  margin-top: 1rem;
+  margin-top: 0.75rem;
+  font-weight: 600;
+  position: relative;
+}
+
+.sidebar-menu-divider::after {
+  content: '';
+  position: absolute;
+  left: 1.5rem;
+  right: 1.5rem;
+  height: 1px;
+  background: #f0f0f0;
+  bottom: -2px;
 }
 
 /* Sidebar Footer */
 .sidebar-footer {
-  padding: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 0.75rem;
+  padding: 1.5rem;
+  border-top: 1px solid #f0f0f0;
+  font-size: 0.8rem;
   text-align: center;
-  color: rgba(255, 255, 255, 0.6);
+  color: #718096;
+  background: #ffffff;
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
 }
 
 /* Responsive Styles */
@@ -118,31 +221,42 @@
   .sidebar {
     transform: translateX(-100%);
     width: 85%;
-    max-width: 300px;
-    min-width: 250px;
-    z-index: 1010; /* Higher than navigation */
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    max-width: 320px;
+    min-width: 280px;
+    z-index: 9999;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
   }
 
   .sidebar.open {
     transform: translateX(0);
   }
 
-  /* Add overlay when sidebar is open */
-  .sidebar.open::after {
+  .sidebar-branding {
+    padding: 1rem;
+  }
+
+  /* Overlay when sidebar is open */
+  body.sidebar-open::after {
     content: '';
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: -1;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(2px);
+    z-index: 9998;
+    animation: fadeIn 0.3s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 
   /* Adjust sidebar header for mobile */
   .sidebar-header {
-    padding: 1.2rem 1rem;
+    padding: 1.25rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -150,36 +264,64 @@
 
   /* Make menu items larger and more touch-friendly */
   .sidebar-menu-link {
-    padding: 0.9rem 1.5rem;
-    font-size: 1.05rem;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
   }
 
   /* Add close button for mobile */
   .sidebar-close {
-    display: block;
-    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f7fafc;
     border: none;
-    color: white;
-    font-size: 1.5rem;
+    border-radius: 8px;
+    color: #4a5568;
+    font-size: 1.2rem;
     cursor: pointer;
-    padding: 0.5rem;
+    padding: 0.6rem;
+    width: 40px;
+    height: 40px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+
+  .sidebar-close:hover {
+    background: #edf2f7;
+    color: #2b6cb0;
   }
 }
 
-/* Ensure the sidebar fills the entire height */
-.site-sidebar {
-  height: 100vh;
+/* Animation for sidebar menu items */
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.sidebar-menu-item {
+  animation: fadeInLeft 0.3s ease forwards;
+  animation-delay: calc(var(--item-index, 0) * 0.05s);
+  opacity: 0;
+}
+
+/* Additional helper classes */
+.sidebar-backdrop {
   position: fixed;
   top: 0;
   left: 0;
+  right: 0;
   bottom: 0;
-  width: 250px;
-  min-width: 250px;
-  max-width: 250px;
-  box-sizing: border-box;
-  z-index: 40;
-  border-right: none;
-  margin-right: 0;
-  padding-right: 0;
-  overflow-x: hidden;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9998; /* Just below sidebar z-index */
+  display: none;
+}
+
+.sidebar-backdrop.active {
+  display: block;
 }

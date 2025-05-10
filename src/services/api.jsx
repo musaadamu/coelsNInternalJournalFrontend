@@ -3,11 +3,11 @@ import axios from 'axios';
 // Determine the correct base URL based on environment
 const getBaseUrl = () => {
   // For production (Vercel deployment)
-  if (process.env.NODE_ENV === 'production') {
+  if (import.meta.env.PROD) {
     return 'https://coelsn-backend.onrender.com/api';
   }
   // For local development
-  return process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+  return import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 };
 
 // Log the API base URL for debugging
@@ -156,7 +156,7 @@ api.journals = {
     };
 
     // Determine the correct base URL based on environment
-    const baseUrl = process.env.NODE_ENV === 'production'
+    const baseUrl = import.meta.env.PROD
       ? 'https://coelsn-backend.onrender.com'
       : 'http://localhost:5000';
 
@@ -207,7 +207,7 @@ api.journals = {
   },
   upload: async (formData) => {
     // Determine the correct base URL based on environment
-    const baseUrl = process.env.NODE_ENV === 'production'
+    const baseUrl = import.meta.env.PROD
       ? 'https://coelsn-backend.onrender.com'
       : 'http://localhost:5000';
 
@@ -240,7 +240,7 @@ api.submissions = {
     };
 
     // Determine the correct base URL based on environment
-    const baseUrl = process.env.NODE_ENV === 'production'
+    const baseUrl = import.meta.env.PROD
       ? 'https://coelsn-backend.onrender.com'
       : 'http://localhost:5000';
 
