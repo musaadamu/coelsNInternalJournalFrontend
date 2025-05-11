@@ -24,6 +24,8 @@ body {
   min-height: 100vh;
   position: relative;
   transition: all 0.3s ease;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 /* Navigation container - constrains navigation width */
@@ -44,6 +46,8 @@ body {
   position: relative;
   margin-top: 80px; /* Height of the navigation bar */
   min-height: calc(100vh - 80px); /* Full height minus nav */
+  width: 100%;
+  transition: width 0.3s ease;
 }
 
 /* When sidebar is open - adjust nav container */
@@ -51,6 +55,12 @@ body {
   left: 280px; /* Width of sidebar */
   width: calc(100% - 280px - 40px); /* Full width minus sidebar minus padding */
   margin: 0 auto;
+}
+
+/* When sidebar is open - adjust content area and nav container */
+.layout-container.sidebar-open .content-area {
+  width: calc(100% - 280px);
+  margin-left: 280px;
 }
 
 /* Main content wrapper - contains main and footer */
@@ -65,13 +75,13 @@ body {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
   border-radius: 8px 8px 0 0;
   overflow: hidden;
+  position: relative;
 }
 
 /* When sidebar is open */
 .layout-container.sidebar-open .main-content-wrapper {
-  margin-left: 280px; /* Width of the sidebar */
-  width: calc(100% - 290px); /* Slightly increased width with reduced margin */
-  margin-right: 10px; /* Reduced margin on the opposite side */
+  margin-left: 0;
+  width: 100%;
 }
 
 /* Main content area */

@@ -7,10 +7,11 @@
   right: 0;
   left: 0;
   z-index: 1000;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease, width 0.3s ease, left 0.3s ease;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
   height: 80px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
 }
 
 /* Scrolled state - more compact and with shadow */
@@ -30,6 +31,7 @@
   .sidebar-open .modern-navigation {
     margin-left: 280px;
     width: calc(100% - 280px);
+    left: 280px;
   }
 }
 
@@ -38,11 +40,11 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
   height: 100%;
   width: 100%;
+  max-width: 100%;
   position: relative;
+  margin: 0 auto;
 }
 
 /* Logo Section */
