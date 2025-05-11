@@ -377,4 +377,10 @@
   .sidebar-open .newsletter-container {
     max-width: 100%;
   }
+
+  .layout-container.sidebar-open .professional-footer {
+    margin-left: 280px;
+    width: calc(100% - 280px);
+    transition: margin-left 0.3s ease, width 0.3s ease;
+  }
 }

@@ -1,10 +1,9 @@
 import axios from 'axios';
 
 // Determine the correct base URL based on environment
-const getBaseUrl = () => {
-  // For production (Vercel deployment)
+const getBaseUrl = () => {  // For production (Vercel deployment)
   if (import.meta.env.PROD) {
-    return 'https://coelsn-backend.onrender.com/api';
+    return 'https://coels-backend.onrender.com/api';
   }
   // For local development
   return import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -15,7 +14,7 @@ const apiBaseUrl = getBaseUrl();
 console.log('API Base URL:', apiBaseUrl);
 
 // Add a function to check if we're using the production API
-export const isProduction = () => apiBaseUrl.includes('coelsn-backend.onrender.com');
+export const isProduction = () => apiBaseUrl.includes('coels-backend.onrender.com');
 
 // Create axios instance with base URL
 const api = axios.create({
@@ -157,7 +156,7 @@ api.journals = {
 
     // Determine the correct base URL based on environment
     const baseUrl = import.meta.env.PROD
-      ? 'https://coelsn-backend.onrender.com'
+      ? 'https://coels-backend.onrender.com'
       : 'http://localhost:5000';
 
     console.log('Using base URL for download:', baseUrl);
@@ -241,7 +240,7 @@ api.submissions = {
 
     // Determine the correct base URL based on environment
     const baseUrl = import.meta.env.PROD
-      ? 'https://coelsn-backend.onrender.com'
+      ? 'https://coels-backend.onrender.com'
       : 'http://localhost:5000';
 
     console.log('Using base URL for submission download:', baseUrl);

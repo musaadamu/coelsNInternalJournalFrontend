@@ -184,7 +184,7 @@ const JournalList = () => {
 
             // Get the backend URL
             const backendUrl = isProduction
-                ? 'https://coelsn-backend.onrender.com'
+                ? 'https://coels-backend.onrender.com'
                 : 'http://localhost:5000';
 
             console.log('Environment:', { isProduction, NODE_ENV: process.env.NODE_ENV });

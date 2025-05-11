@@ -35,7 +35,7 @@ const JournalDetail = () => {
             const toastId = toast.loading(`Preparing ${fileType.toUpperCase()} download...`);
 
             // Get the base URL
-            const baseUrl = api.defaults.baseURL || 'https://coelsn-backend.onrender.com/api';
+            const baseUrl = api.defaults.baseURL || 'https://coels-backend.onrender.com/api';
 
             // Create the direct download URL
             const downloadUrl = `${baseUrl}/journals/${id}/direct-download/${fileType}`;

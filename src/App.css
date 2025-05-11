@@ -1,4 +1,6 @@
-/* App-wide styles */
+/* App.css */
+
+/* Base styles */
 body {
   margin: 0;
   padding: 0;
@@ -9,214 +11,97 @@ body {
   background-color: #1a365d; /* Match footer bottom color */
 }
 
-/* Application container */
-.app-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-
-/* Layout container - handles the positioning of all elements */
-.layout-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  position: relative;
-  transition: all 0.3s ease;
-  max-width: 100%;
-  margin: 0 auto;
-}
-
-/* Navigation container - constrains navigation width */
-.nav-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  transition: all 0.3s ease;
-  padding: 0 20px; /* Side margin */
-}
-
-/* Content area - contains sidebar and main content */
-.content-area {
-  display: flex;
-  flex: 1;
-  position: relative;
-  margin-top: 80px; /* Height of the navigation bar */
-  min-height: calc(100vh - 80px); /* Full height minus nav */
-  width: 100%;
-  transition: width 0.3s ease;
-}
-
-/* When sidebar is open - adjust nav container */
-.layout-container.sidebar-open .nav-container {
-  left: 280px; /* Width of sidebar */
-  width: calc(100% - 280px - 40px); /* Full width minus sidebar minus padding */
-  margin: 0 auto;
-}
-
-/* When sidebar is open - adjust content area and nav container */
-.layout-container.sidebar-open .content-area {
-  width: calc(100% - 280px);
-  margin-left: 280px;
-}
-
-/* Main content wrapper - contains main and footer */
-.main-content-wrapper {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  margin-left: 0; /* Default: no sidebar */
-  transition: margin-left 0.3s ease, width 0.3s ease;
-  width: 100%;
-  background-color: #fff;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-  border-radius: 8px 8px 0 0;
-  overflow: hidden;
-  position: relative;
-}
-
-/* When sidebar is open */
-.layout-container.sidebar-open .main-content-wrapper {
-  margin-left: 0;
-  width: 100%;
-}
-
-/* Main content area */
-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  overflow-x: hidden; /* Prevent horizontal overflow */
-  box-sizing: border-box; /* Include padding in width calculation */
-  padding: 30px; /* Add padding all around */
-  background-color: #fff;
-}
-
-/* Sidebar styles */
-.site-sidebar {
-  position: fixed;
-  top: 0; /* Start from the very top */
-  left: -280px; /* Start off-screen, match sidebar width */
-  bottom: 0;
-  width: 280px;
-  z-index: 1100; /* Higher than nav to show sidebar above nav */
-  transition: left 0.3s ease;
-  background: #ffffff;
-  color: #333;
-  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.08);
-  border-right: 1px solid #f0f0f0;
-  padding-top: 80px; /* Account for navbar height */
-}
-
-.site-sidebar.open {
-  left: 0; /* Move on-screen when open */
-}
-
-/* Sidebar backdrop */
-.sidebar-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000; /* Just below sidebar */
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.layout-container.sidebar-open .sidebar-backdrop {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* Footer adjustments */
-.site-footer {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  flex-shrink: 0;
-  transition: width 0.3s ease, margin-left 0.3s ease;
-}
-
-/* Ensure footer aligns with content width */
-.layout-container.sidebar-open .site-footer {
-  width: calc(100% - 290px);
-  margin-left: 280px;
-  margin-right: 10px;
-}
-
-/* Scrolled state adjustments */
-.modern-navigation.scrolled ~ .content-area {
-  margin-top: 60px; /* Height of the scrolled navigation bar */
-}
-
-.modern-navigation.scrolled ~ .site-sidebar {
-  padding-top: 60px; /* Adjust for smaller nav height */
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .content-area {
-    margin-top: 60px; /* Height of the mobile navigation bar */
-  }
-
-  .nav-container {
-    padding: 0 10px; /* Smaller side margin on mobile */
-  }
-
-  .layout-container.sidebar-open .nav-container {
-    left: 0;
-    width: 100%;
-  }
-
-  .main-content-wrapper {
-    margin-left: 0;
-    width: 100%;
-    border-radius: 0;
-  }
-
-  /* Reset footer width and margin on mobile */
-  .layout-container.sidebar-open .site-footer {
-    width: 100%;
-    margin-left: 0;
-  }
-
-  main {
-    padding: 20px; /* Smaller padding on mobile */
-  }
-
-  .site-sidebar {
-    top: 0;
-    padding-top: 60px; /* Adjust for mobile nav height */
-    z-index: 1200; /* Ensure it's above everything on mobile */
-  }
-}
-
 /* Toast Container Adjustments */
 .Toastify__toast-container {
   z-index: 9999;
   position: fixed;
 }
 
-/* Utility classes */
-.flex-grow {
-  flex-grow: 1;
+/* Add this to your CSS files or create a new Layout.css file */
+
+/* General layout adjustments */
+html, body {
+  overflow-x: hidden;
 }
 
-.min-h-screen {
+/* Adjust content for sidebar */
+@media (min-width: 768px) {
+  /* Adjustments for desktop */
+  .main-content {
+    margin-left: 16rem; /* Match sidebar width */
+    width: calc(100% - 16rem);
+  }
+  
+  .nav-fixed {
+    left: 16rem;
+    width: calc(100% - 16rem);
+  }
+  
+  /* Footer adjustments */
+  footer {
+    margin-left: 16rem;
+    width: calc(100% - 16rem);
+  }
+}
+
+/* Mobile sidebar tweaks */
+@media (max-width: 767px) {
+  .sidebar-active {
+    overflow: hidden;
+  }
+  
+  .mobile-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 16rem;
+    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .mobile-sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 40;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  
+  .sidebar-overlay.active {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+/* Sidebar-specific styling */
+.sidebar-container {
+  background: linear-gradient(to bottom, #1e3a8a, #1e40af);
+  color: white;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Fix for footer sticking to bottom */
+.main-layout {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
 }
 
-.flex {
-  display: flex;
+main {
+  flex: 1;
 }
 
-.flex-col {
-  flex-direction: column;
+footer {
+  flex-shrink: 0;
 }

@@ -35,42 +35,26 @@ const Sidebar = ({ className, onClose }) => {
     };
   }, [location.pathname]);
 
-  // Add class to body when sidebar is open on mobile
-  useEffect(() => {
-    if (mobile && className?.includes('open')) {
-      document.body.classList.add('sidebar-open');
-    } else {
-      document.body.classList.remove('sidebar-open');
-    }
-
-    return () => {
-      document.body.classList.remove('sidebar-open');
-    };
-  }, [mobile, className]);
-
   // Check if user is admin
   const isAdmin = user && user.role === 'admin';
 
-  // Apply animation delay to menu items
-  const getMenuItemStyle = (index) => ({
-    '--item-index': index
-  });
-
   return (
     <div className={`sidebar ${className || ''}`}>
-      <div className="sidebar-content">
-        <div className="sidebar-header">
-          <div className="sidebar-header-title">Menu</div>
-          {mobile && (
-            <button className="sidebar-close" onClick={onClose} aria-label="Close sidebar">
-              <i className="fas fa-times"></i>
-            </button>
-          )}
-        </div>
+      <div className="sidebar-header">
+        <Link to="/" className="sidebar-logo">
+          <img src="/images/logo.png" alt="Sahara Journal Logo" className="sidebar-logo-img" />
+          <h2 className="sidebar-title">Sahara Journal</h2>
+        </Link>
+        {mobile && (
+          <button className="sidebar-close" onClick={onClose} aria-label="Close sidebar">
+            <i className="fas fa-times"></i>
+          </button>
+        )}
+      </div>
 
-        <nav className="sidebar-nav">
-          <ul className="sidebar-menu">
-          <li className="sidebar-menu-item" style={getMenuItemStyle(0)}>
+      <nav className="sidebar-nav">
+        <ul className="sidebar-menu">
+          <li className="sidebar-menu-item">
             <Link
               to="/"
               className={`sidebar-menu-link ${activeLink === '/' ? 'active' : ''}`}
@@ -80,7 +64,7 @@ const Sidebar = ({ className, onClose }) => {
             </Link>
           </li>
 
-          <li className="sidebar-menu-item" style={getMenuItemStyle(1)}>
+          <li className="sidebar-menu-item">
             <Link
               to="/journals"
               className={`sidebar-menu-link ${activeLink.includes('/journals') ? 'active' : ''}`}
@@ -90,7 +74,7 @@ const Sidebar = ({ className, onClose }) => {
             </Link>
           </li>
 
-          <li className="sidebar-menu-item" style={getMenuItemStyle(2)}>
+          <li className="sidebar-menu-item">
             <Link
               to="/about"
               className={`sidebar-menu-link ${activeLink === '/about' ? 'active' : ''}`}
@@ -100,7 +84,7 @@ const Sidebar = ({ className, onClose }) => {
             </Link>
           </li>
 
-          <li className="sidebar-menu-item" style={getMenuItemStyle(3)}>
+          <li className="sidebar-menu-item">
             <Link
               to="/guide"
               className={`sidebar-menu-link ${activeLink === '/guide' ? 'active' : ''}`}
@@ -110,7 +94,7 @@ const Sidebar = ({ className, onClose }) => {
             </Link>
           </li>
 
-          <li className="sidebar-menu-item" style={getMenuItemStyle(4)}>
+          <li className="sidebar-menu-item">
             <Link
               to="/contact"
               className={`sidebar-menu-link ${activeLink === '/contact' ? 'active' : ''}`}
@@ -123,11 +107,8 @@ const Sidebar = ({ className, onClose }) => {
           {/* Admin-only menu items */}
           {isAdmin && (
             <>
-              <li className="sidebar-menu-divider">
-                Admin
-                <div className="divider-line"></div>
-              </li>
-              <li className="sidebar-menu-item" style={getMenuItemStyle(5)}>
+              <li className="sidebar-menu-divider">Admin</li>
+              <li className="sidebar-menu-item">
                 <Link
                   to="/manage-journals"
                   className={`sidebar-menu-link ${activeLink === '/manage-journals' ? 'active' : ''}`}
@@ -136,7 +117,7 @@ const Sidebar = ({ className, onClose }) => {
                   <span>Manage Journals</span>
                 </Link>
               </li>
-              <li className="sidebar-menu-item" style={getMenuItemStyle(6)}>
+              <li className="sidebar-menu-item">
                 <Link
                   to="/journals/uploads"
                   className={`sidebar-menu-link ${activeLink === '/journals/uploads' ? 'active' : ''}`}
@@ -151,11 +132,8 @@ const Sidebar = ({ className, onClose }) => {
           {/* User menu items */}
           {user ? (
             <>
-              <li className="sidebar-menu-divider">
-                Account
-                <div className="divider-line"></div>
-              </li>
-              <li className="sidebar-menu-item" style={getMenuItemStyle(isAdmin ? 7 : 5)}>
+              <li className="sidebar-menu-divider">Account</li>
+              <li className="sidebar-menu-item">
                 <Link
                   to="/dashboard"
                   className={`sidebar-menu-link ${activeLink === '/dashboard' ? 'active' : ''}`}
@@ -164,7 +142,7 @@ const Sidebar = ({ className, onClose }) => {
                   <span>Dashboard</span>
                 </Link>
               </li>
-              <li className="sidebar-menu-item" style={getMenuItemStyle(isAdmin ? 8 : 6)}>
+              <li className="sidebar-menu-item">
                 <Link
                   to="/logout"
                   className="sidebar-menu-link"
@@ -176,11 +154,8 @@ const Sidebar = ({ className, onClose }) => {
             </>
           ) : (
             <>
-              <li className="sidebar-menu-divider">
-                Account
-                <div className="divider-line"></div>
-              </li>
-              <li className="sidebar-menu-item" style={getMenuItemStyle(5)}>
+              <li className="sidebar-menu-divider">Account</li>
+              <li className="sidebar-menu-item">
                 <Link
                   to="/login"
                   className={`sidebar-menu-link ${activeLink === '/login' ? 'active' : ''}`}
@@ -189,7 +164,7 @@ const Sidebar = ({ className, onClose }) => {
                   <span>Login</span>
                 </Link>
               </li>
-              <li className="sidebar-menu-item" style={getMenuItemStyle(6)}>
+              <li className="sidebar-menu-item">
                 <Link
                   to="/register"
                   className={`sidebar-menu-link ${activeLink === '/register' ? 'active' : ''}`}
@@ -204,18 +179,7 @@ const Sidebar = ({ className, onClose }) => {
       </nav>
 
       <div className="sidebar-footer">
-        <p>&copy; {new Date().getFullYear()} COELSN Journal</p>
-      </div>
-      </div>
-
-      <div className="sidebar-branding">
-        <Link to="/" className="sidebar-logo">
-          <img src="/images/logo.jpg" alt="COELSN Journal Logo" className="sidebar-logo-img" />
-          <div className="sidebar-title-container">
-            <h2 className="sidebar-title">COELSN Journal</h2>
-            <p className="sidebar-subtitle">Interdisciplinary Academic Research</p>
-          </div>
-        </Link>
+        <p>&copy; {new Date().getFullYear()} Sahara Journal</p>
       </div>
     </div>
   );

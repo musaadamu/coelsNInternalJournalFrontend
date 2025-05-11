@@ -90,8 +90,7 @@ export const downloadFile = async (url, filename, fileType) => {
             return true;
         }
 
-        // For Render backend, ensure we're not sending credentials
-        const isRenderBackend = url.includes('coelsn-backend.onrender.com');
+        // For Render backend, ensure we're not sending credentials        const isRenderBackend = url.includes('coels-backend.onrender.com');
         const isDirectFileEndpoint = url.includes('/direct-file/');
 
         console.log('Request headers:', headers);
@@ -229,8 +228,7 @@ export const downloadJournalFile = async (baseUrl, journalId, fileType, title, c
     }
 
     // Clean the base URL to get the backend root
-    const backendRoot = baseUrl.replace('/api', '');
-    const backendUrl = isProduction ? 'https://coelsn-backend.onrender.com' : 'http://localhost:5000';
+    const backendRoot = baseUrl.replace('/api', '');    const backendUrl = isProduction ? 'https://coels-backend.onrender.com' : 'http://localhost:5000';
 
     // Determine if we're running locally or accessing the deployed backend
     const isLocalBackend = window.location.hostname === 'localhost';
@@ -249,7 +247,7 @@ export const downloadJournalFile = async (baseUrl, journalId, fileType, title, c
         // For production (Render backend)
         urlsToTry.push(
             // Primary API endpoint - this is the path that works locally
-            `https://coelsn-backend.onrender.com/api/journals/${journalId}/download/${fileType}`
+            `https://coels-backend.onrender.com/api/journals/${journalId}/download/${fileType}`
         );
     } else {
         // For local development - the known working path

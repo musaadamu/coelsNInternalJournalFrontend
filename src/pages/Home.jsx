@@ -82,8 +82,8 @@ export default function HomePage() {
                     </button>
                 )}
 
-                <div className="main-container" style={{ marginLeft: 0, width: '100%' }}>
-                    <main className="main-content" style={{ marginLeft: 0, width: '100%', maxWidth: '1280px', margin: '0 auto', padding: '0 2rem' }}>
+                <div className="main-container">
+                    <main className="main-content">
                         {/* Journal Title */}
                         <div className="journal-title-container">
                             <h1 className="journal-main-title">COELSN Journal of Interdisciplinary Academic Research and Development</h1>
