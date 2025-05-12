@@ -3,7 +3,7 @@ import axios from 'axios';
 // Determine the correct base URL based on environment
 const getBaseUrl = () => {  // For production (Vercel deployment)
   if (import.meta.env.PROD) {
-    return 'https://coels-backend.onrender.com/api';
+    return 'https://coelsn-backend.onrender.com/api';
   }
   // For local development
   return import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -14,7 +14,7 @@ const apiBaseUrl = getBaseUrl();
 console.log('API Base URL:', apiBaseUrl);
 
 // Add a function to check if we're using the production API
-export const isProduction = () => apiBaseUrl.includes('coels-backend.onrender.com');
+export const isProduction = () => apiBaseUrl.includes('coelsn-backend.onrender.com');
 
 // Create axios instance with base URL
 const api = axios.create({
@@ -83,13 +83,28 @@ api.interceptors.response.use(
 
 // Helper methods for authentication
 api.auth = {
-  // Try both endpoint patterns for better compatibility
   login: (credentials) => {
     console.log('Attempting login with credentials:', credentials);
     return api.post('/login', credentials)
+      .then(response => {
+        console.log('Login response:', response.data);
+        if (response.data.token) {
+          localStorage.setItem('authToken', response.data.token);
+          localStorage.setItem('authUser', JSON.stringify(response.data.user));
+        }
+        return response;
+      })
       .catch(error => {
         console.log('Login failed at /login, trying /api/auth/login');
-        return api.post('/api/auth/login', credentials);
+        return api.post('/api/auth/login', credentials)
+          .then(response => {
+            console.log('Login response from alternate endpoint:', response.data);
+            if (response.data.token) {
+              localStorage.setItem('authToken', response.data.token);
+              localStorage.setItem('authUser', JSON.stringify(response.data.user));
+            }
+            return response;
+          });
       });
   },
   register: (userData) => {

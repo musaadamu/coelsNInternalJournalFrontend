@@ -10,11 +10,18 @@ import ImprovedCarousel from "../components/Carousol.jsx";
 // No need to import CarouselImages anymore
 
 export default function HomePage() {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-    // We're now using direct paths to images
+    // Handle window resize
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     // Define carousel images with multiple fallback options
     const carouselImages = [
@@ -42,46 +49,9 @@ export default function HomePage() {
         }
     ];
 
-    // Function to check if device is mobile
-    const checkMobile = () => {
-        setIsMobile(window.innerWidth <= 768);
-    };
-
-    // Function to toggle sidebar
-    const toggleSidebar = () => {
-        setSidebarOpen(!sidebarOpen);
-    };
-
-    // Function to close sidebar
-    const closeSidebar = () => {
-        setSidebarOpen(false);
-    };
-
-    useEffect(() => {
-        // Check mobile on mount and window resize
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-
-        // Cleanup
-        return () => {
-            window.removeEventListener('resize', checkMobile);
-        };
-    }, []);
-
     return (
-        <div className={`home-container ${isMobile ? 'mobile' : ''}`}>
+        <div className="home-container">
             <div className="min-h-screen bg-gray-50 text-gray-900">
-                {/* Mobile sidebar toggle button - only shown on mobile */}
-                {isMobile && (
-                    <button
-                        className="mobile-sidebar-toggle"
-                        onClick={toggleSidebar}
-                        aria-label="Toggle sidebar"
-                    >
-                        <i className="fas fa-bars"></i>
-                    </button>
-                )}
-
                 <div className="main-container">
                     <main className="main-content">
                         {/* Journal Title */}

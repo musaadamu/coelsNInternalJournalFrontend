@@ -8,6 +8,36 @@ import './JournalList.css';
 import api from '../services/api';
 import { downloadJournalFile } from '../utils/fileDownload';
 
+// Add Cloudinary URLs for direct access as a last resort
+const CLOUDINARY_PDF_URLS = [
+    'https://res.cloudinary.com/musaadamu/raw/upload/v1746729149/coelsN_Uploads/1746729142888-1746729142665-tagans5.pdf',
+    'https://res.cloudinary.com/musaadamu/raw/upload/v1746728320/coelsN_Uploads/1746728285131-1746728284548-Tagans4.pdf',
+    'https://res.cloudinary.com/musaadamu/raw/upload/v1746723286/coelsN_Uploads/1746723283897-1746723283544-Tangas1.pdf'
+];
+
+// Helper function to try all Cloudinary URLs as a last resort
+const tryAllCloudinaryUrls = (title) => {
+    toast.info(`Trying direct Cloudinary access as last resort...`);
+
+    // Try to find a matching URL based on title
+    let urlIndex = 0;
+    if (title) {
+        const titleLower = title.toLowerCase();
+        if (titleLower.includes('tagans5')) urlIndex = 0;
+        else if (titleLower.includes('tagans4')) urlIndex = 1;
+        else if (titleLower.includes('tangas1')) urlIndex = 2;
+    }
+
+    // Open the URL as a fallback
+    window.open(CLOUDINARY_PDF_URLS[urlIndex], '_blank');
+
+    // If we're not sure which URL is correct, try the others after a delay
+    setTimeout(() => {
+        toast.info(`Trying alternative Cloudinary URL...`);
+        window.open(CLOUDINARY_PDF_URLS[(urlIndex + 1) % 3], '_blank');
+    }, 3000);
+};
+
 const JournalList = () => {
     const navigate = useNavigate();
     const [journals, setJournals] = useState([]);
@@ -171,34 +201,74 @@ const JournalList = () => {
     };
 
     const handleDownload = async (id, fileType) => {
-        console.log(`Downloading ${fileType} file for journal ID:`, id);
         try {
             // Show loading toast
             const toastId = toast.loading(`Preparing ${fileType.toUpperCase()} download...`);
 
-            // Find the journal in our list
-            const journal = journals.find(j => j._id === id);
+            console.log(`Downloading ${fileType} file for journal ID:`, id);
 
-            // Determine if we're in production or development
-            const isProduction = process.env.NODE_ENV === 'production';
+            // Try using the API service's download method which has built-in fallbacks
+            try {
+                const response = await api.journals.download(id, fileType);
 
-            // Get the backend URL
-            const backendUrl = isProduction
-                ? 'https://coels-backend.onrender.com'
-                : 'http://localhost:5000';
+                // If we get a response, we can either:
+                // 1. Create a download link from the blob (works well in development)
+                if (process.env.NODE_ENV !== 'production') {
+                    // Create a download link
+                    const blobUrl = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    const journal = journals.find(j => j._id === id);
+                    link.href = blobUrl;
+                    link.setAttribute('download', `${journal?.title || 'journal'}.${fileType}`);
+                    document.body.appendChild(link);
+                    link.click();
 
-            console.log('Environment:', { isProduction, NODE_ENV: process.env.NODE_ENV });
-            console.log('Using backend URL:', backendUrl);
-            console.log('API base URL:', api.defaults.baseURL);
+                    // Clean up
+                    setTimeout(() => {
+                        window.URL.revokeObjectURL(blobUrl);
+                        link.remove();
+                    }, 100);
 
-            // Rest of the download logic would go here
-            // For brevity, we're not including the full component
+                    toast.dismiss(toastId);
+                    toast.success(`File downloaded as ${fileType.toUpperCase()}`);
+                    return;
+                }
+            } catch (apiError) {
+                console.error('API download failed:', apiError);
+                // Continue to direct URL approach
+            }
+
+            // Fallback to direct URL approach (works better in production)
+            // Get the base URL
+            const baseUrl = api.defaults.baseURL || 'https://coels-backend.onrender.com/api';
+
+            // Create the direct download URL
+            const downloadUrl = `${baseUrl}/journals/${id}/direct-download/${fileType}`;
+
+            console.log('Using direct download URL:', downloadUrl);
+
+            // Open the URL in a new tab
+            window.open(downloadUrl, '_blank');
 
             toast.dismiss(toastId);
-            toast.success(`Download initiated for ${fileType.toUpperCase()}`);
-        } catch (error) {
-            console.error('Download error:', error);
-            toast.error(`Error downloading file: ${error.message}`);
+            toast.success(`Opening ${fileType.toUpperCase()} file in new tab`);
+        } catch (err) {
+            console.error(`Error downloading ${fileType} file:`, err);
+            toast.error(`Failed to download ${fileType.toUpperCase()} file`);
+
+            // As a last resort, try using the Cloudinary URLs directly
+            if (fileType === 'pdf') {
+                try {
+                    // Find the journal to get its title
+                    const journal = journals.find(j => j._id === id);
+                    if (journal) {
+                        // Use the helper function to try all Cloudinary URLs
+                        tryAllCloudinaryUrls(journal.title);
+                    }
+                } catch (cloudinaryError) {
+                    console.error('Cloudinary direct access failed:', cloudinaryError);
+                }
+            }
         }
     };
 
@@ -306,14 +376,20 @@ const JournalList = () => {
                     filteredJournals.map(journal => (
                         <div key={journal._id} className="journal-card">
                             <div className="journal-card-header">
-                                <h3>{journal.title}</h3>
+                                <Link 
+                                    to={`/journals/${journal._id}`} 
+                                    className="journal-title-link"
+                                >
+                                    <h3>{journal.title}</h3>
+                                </Link>
                                 <div className="journal-meta">
                                     <span className="journal-date">
                                         <FiCalendar />
                                         {journal.publicationDate ?
                                             new Date(journal.publicationDate).toLocaleDateString('en-US', {
                                                 year: 'numeric',
-                                                month: 'short'
+                                                month: 'short',
+                                                day: 'numeric'
                                             }) : 'Date not available'}
                                     </span>
                                     {journal.journalName && (
@@ -325,34 +401,52 @@ const JournalList = () => {
                                 </div>
                             </div>
 
-                            <div className="journal-abstract">
-                                <p>
-                                    {journal.abstract ?
-                                        (journal.abstract.length > 200 ?
-                                            `${journal.abstract.substring(0, 200)}...` :
-                                            journal.abstract) :
-                                        'No abstract available'}
+                            <div className="abstract-section">
+                                <h4 className="abstract-heading">Abstract</h4>
+                                <p className="journal-abstract">
+                                    {journal.abstract || 'No abstract available'}
                                 </p>
                             </div>
 
                             {journal.authors && journal.authors.length > 0 && (
-                                <div className="journal-authors">
-                                    <FiUser />
-                                    <span>
-                                        {journal.authors.map(author => author.name).join(', ')}
-                                    </span>
+                                <div className="authors-section">
+                                    <h5>
+                                        <FiUser className="inline-icon" />
+                                        Authors
+                                    </h5>
+                                    <p>
+                                        <FiUser className="inline-icon" />
+                                        {Array.isArray(journal.authors) 
+                                            ? journal.authors.map(author => typeof author === 'string' ? author : author.name).join(', ')
+                                            : typeof journal.authors === 'string' 
+                                                ? journal.authors 
+                                                : 'Authors not available'
+                                        }
+                                    </p>
+                                </div>
+                            )}
+
+                            {journal.keywords && journal.keywords.length > 0 && (
+                                <div className="keywords-section">
+                                    <div className="keyword-list">
+                                        {journal.keywords.map((keyword, idx) => (
+                                            <span key={idx} className="keyword-tag">
+                                                {keyword}
+                                            </span>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
 
                             <div className="journal-actions">
                                 <Link to={`/journals/${journal._id}`} className="view-button">
-                                    <FiEye /> View Details
+                                    <FiEye /> View Full Article
                                 </Link>
                                 <button
                                     className="download-button"
                                     onClick={() => handleDownload(journal._id, 'pdf')}
                                 >
-                                    <FiDownload /> Download
+                                    <FiDownload /> Download PDF
                                 </button>
                             </div>
                         </div>

@@ -1,100 +1,225 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import Navigation from './Navigation.jsx';
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { useDropzone } from 'react-dropzone';
+import { motion, AnimatePresence } from 'framer-motion';
+import axios from 'axios';
+import './JournalSubmission.css';
+
+// Determine API base URL based on environment and available URLs
+const API_BASE_URL = import.meta.env.VITE_API_URL || 
+                    (window.location.hostname === 'localhost' ? 'http://localhost:5000' : 
+                     'https://coelsn-backend.onrender.com');
 
 const JournalSubmission = () => {
-    return (
-        <div className="min-h-screen bg-gray-50">
-            <Navigation />
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-                <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                    <div className="p-6 sm:p-10">
-                        <h1 className="text-3xl font-bold text-gray-900 mb-6">Journal Submission Guidelines</h1>
-                        
-                        <div className="prose max-w-none">
-                            <h2 className="text-xl font-semibold text-gray-800 mt-8 mb-4">About the Journal</h2>
-                            <p className="mb-4">
-                                The COELSN Journal of Interdisciplinary Academic Research and Development is a peer-reviewed academic journal that publishes original research, review articles, and scholarly contributions across multiple disciplines. Our journal aims to promote interdisciplinary research and foster collaboration between researchers from different fields.
-                            </p>
-                            
-                            <h2 className="text-xl font-semibold text-gray-800 mt-8 mb-4">Submission Requirements</h2>
-                            <p className="mb-4">
-                                All manuscripts submitted to the COELSN Journal must adhere to the following guidelines:
-                            </p>
-                            
-                            <ul className="list-disc pl-6 mb-6">
-                                <li className="mb-2">
-                                    <strong>Original Work:</strong> All submissions must be original work that has not been published elsewhere or is not under consideration for publication in another journal.
-                                </li>
-                                <li className="mb-2">
-                                    <strong>Language:</strong> Manuscripts must be written in English. Authors whose native language is not English are encouraged to have their manuscripts checked by a native English speaker before submission.
-                                </li>
-                                <li className="mb-2">
-                                    <strong>Length:</strong> Research articles should be between 4,000 and 8,000 words, including references, tables, and figures. Review articles may be longer, up to 10,000 words.
-                                </li>
-                                <li className="mb-2">
-                                    <strong>Format:</strong> Manuscripts must be submitted in both PDF and Microsoft Word (.docx) formats. The text should be double-spaced, in 12-point Times New Roman font, with 1-inch margins.
-                                </li>
-                                <li className="mb-2">
-                                    <strong>Structure:</strong> Manuscripts should include the following sections: Title, Abstract, Keywords, Introduction, Literature Review, Methodology, Results, Discussion, Conclusion, and References.
-                                </li>
-                                <li className="mb-2">
-                                    <strong>Abstract:</strong> An abstract of 150-250 words should accompany the manuscript, summarizing the research question, methodology, findings, and implications.
-                                </li>
-                                <li className="mb-2">
-                                    <strong>Keywords:</strong> 4-6 keywords that best describe the content of the manuscript should be provided.
-                                </li>
-                                <li className="mb-2">
-                                    <strong>References:</strong> All references should follow the APA (7th edition) citation style.
-                                </li>
-                            </ul>
-                            
-                            <h2 className="text-xl font-semibold text-gray-800 mt-8 mb-4">Peer Review Process</h2>
-                            <p className="mb-4">
-                                All submissions undergo a rigorous double-blind peer review process. The review process typically takes 4-6 weeks. Authors will be notified of the editorial decision as soon as the review process is complete.
-                            </p>
-                            
-                            <h2 className="text-xl font-semibold text-gray-800 mt-8 mb-4">Publication Ethics</h2>
-                            <p className="mb-4">
-                                The COELSN Journal adheres to the highest standards of publication ethics. Authors must disclose any conflicts of interest and ensure that their research has been conducted ethically. Plagiarism, data fabrication, or any other form of academic misconduct will result in immediate rejection of the manuscript.
-                            </p>
-                            
-                            <h2 className="text-xl font-semibold text-gray-800 mt-8 mb-4">Copyright and Licensing</h2>
-                            <p className="mb-4">
-                                Authors retain copyright of their work but grant the COELSN Journal the exclusive right to publish and distribute the article. All articles published in the COELSN Journal are licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
-                            </p>
-                            
-                            <h2 className="text-xl font-semibold text-gray-800 mt-8 mb-4">Submission Process</h2>
-                            <p className="mb-4">
-                                To submit your manuscript, please follow these steps:
-                            </p>
-                            
-                            <ol className="list-decimal pl-6 mb-6">
-                                <li className="mb-2">Create an account on our journal submission platform</li>
-                                <li className="mb-2">Prepare your manuscript according to the guidelines above</li>
-                                <li className="mb-2">Upload both PDF and Word versions of your manuscript</li>
-                                <li className="mb-2">Provide all required metadata (title, abstract, keywords, etc.)</li>
-                                <li className="mb-2">Submit your manuscript</li>
-                            </ol>
-                            
-                            <div className="bg-blue-50 p-6 rounded-lg mt-8">
-                                <h3 className="text-lg font-semibold text-blue-800 mb-3">Ready to Submit?</h3>
-                                <p className="text-blue-700 mb-4">
-                                    We welcome your contribution to the COELSN Journal of Interdisciplinary Academic Research and Development. If you have any questions about the submission process, please contact our editorial team.
-                                </p>
-                                <Link
-                                    to="/journals/new"
-                                    className="inline-block px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors"
-                                >
-                                    Submit Your Manuscript
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  const [file, setFile] = useState(null);
+  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const onDrop = (acceptedFiles) => {
+    if (acceptedFiles && acceptedFiles.length > 0) {
+      setFile(acceptedFiles[0]);
+      console.log('File dropped:', acceptedFiles[0]);
+    }
+  };
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx']
+    },
+    maxFiles: 1
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      title: '',
+      abstract: '',
+      keywords: '',
+      authors: '',
+      uploadFile: null
+    },
+    validationSchema: Yup.object({
+      title: Yup.string().required('Title is required'),
+      abstract: Yup.string().required('Abstract is required'),
+      keywords: Yup.string().required('Keywords are required'),
+      authors: Yup.string().required('Authors are required')
+    }),
+    onSubmit: async (values, { resetForm }) => {
+      const selectedFile = file || values.uploadFile;
+
+      if (!selectedFile) {
+        toast.error('Please upload a .docx file');
+        return;
+      }
+
+      setLoading(true);
+      setSuccess(false);
+
+      try {
+        const formData = new FormData();
+        formData.append('title', values.title);
+        formData.append('abstract', values.abstract);
+        formData.append('keywords', JSON.stringify(values.keywords.split(',').map(k => k.trim())));
+        formData.append('authors', JSON.stringify(values.authors.split(',').map(a => a.trim())));
+        formData.append('file', selectedFile);
+
+        const endpoint = API_BASE_URL.includes('/api') ? '/submissions' : '/api/submissions';
+        const response = await axios.post(`${API_BASE_URL}${endpoint}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          timeout: 30000
+        });
+
+        if (response.status === 201 || response.status === 200) {
+          toast.success('Journal submitted successfully');
+          resetForm();
+          setFile(null);
+          setSuccess(true);
+        } else {
+          throw new Error('Unexpected server response');
+        }
+      } catch (err) {
+        console.error('Submission error:', err);
+        let errorMessage = 'Submission failed. Please try again.';
+
+        if (err.response) {
+          errorMessage = err.response.data?.message || errorMessage;
+        } else if (err.request) {
+          errorMessage = 'Network error. Please check your connection.';
+        }
+
+        toast.error(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    }
+  });
+
+  const handleFileChange = (event) => {
+    const selectedFile = event.currentTarget.files[0];
+    if (selectedFile) {
+      formik.setFieldValue('uploadFile', selectedFile);
+      setFile(null);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-8">
+        <div className="journal-submission-container max-w-4xl mx-auto">
+          <h2 className="text-2xl font-bold mb-6">Submit Your Journal</h2>
+
+          <form onSubmit={formik.handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
+            <input
+              type="text"
+              name="title"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.title}
+              placeholder="Title"
+              className="w-full p-2 border rounded-md mb-2"
+            />
+            {formik.touched.title && formik.errors.title && (
+              <p className="text-red-500 text-sm mb-2">{formik.errors.title}</p>
+            )}
+
+            <textarea
+              name="abstract"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.abstract}
+              placeholder="Abstract"
+              className="w-full p-2 border rounded-md h-32 mb-2"
+            />
+            {formik.touched.abstract && formik.errors.abstract && (
+              <p className="text-red-500 text-sm mb-2">{formik.errors.abstract}</p>
+            )}
+
+            <input
+              type="text"
+              name="keywords"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.keywords}
+              placeholder="Keywords (comma-separated)"
+              className="w-full p-2 border rounded-md mb-2"
+            />
+            {formik.touched.keywords && formik.errors.keywords && (
+              <p className="text-red-500 text-sm mb-2">{formik.errors.keywords}</p>
+            )}
+
+            <input
+              type="text"
+              name="authors"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.authors}
+              placeholder="Authors (comma-separated)"
+              className="w-full p-2 border rounded-md mb-2"
+            />
+            {formik.touched.authors && formik.errors.authors && (
+              <p className="text-red-500 text-sm mb-2">{formik.errors.authors}</p>
+            )}
+
+            <div className="mb-4">
+              <label className="block mb-1 text-gray-700 font-medium">Choose a .docx file</label>
+              <input
+                type="file"
+                name="uploadFile"
+                accept=".docx"
+                onChange={handleFileChange}
+                className="w-full p-2 border rounded-md"
+              />
             </div>
+
+            <div
+              {...getRootProps()}
+              className={`border-2 border-dashed rounded-md p-4 text-center cursor-pointer mb-4 ${isDragActive ? 'bg-blue-100 border-blue-500' : 'border-gray-300'}`}
+            >
+              <input {...getInputProps()} />
+              {file ? (
+                <p className="text-green-600 font-semibold">{file.name}</p>
+              ) : (
+                <p className="text-gray-600">Drag and drop a .docx file here, or click to select</p>
+              )}
+            </div>
+
+            {(file || formik.values.uploadFile) && (
+              <div className="mb-4 p-2 bg-green-50 border border-green-200 rounded">
+                <p className="text-green-700">
+                  File selected: {file ? file.name : formik.values.uploadFile?.name}
+                </p>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className={`px-4 py-2 text-white rounded-md ${loading ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'}`}
+            >
+              {loading ? 'Submitting...' : 'Submit'}
+            </button>
+          </form>
+
+          <AnimatePresence>
+            {success && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="mt-6 p-4 bg-green-100 text-green-700 rounded shadow"
+              >
+                🎉 Journal submitted successfully!
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default JournalSubmission;

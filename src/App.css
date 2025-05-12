@@ -11,6 +11,22 @@ body {
   background-color: #1a365d; /* Match footer bottom color */
 }
 
+/* App Container */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding-top: 80px;
+  transition: margin-left 0.3s ease;
+  background-color: #f8fafc;
+  min-height: calc(100vh - 80px);
+}
+
 /* Toast Container Adjustments */
 .Toastify__toast-container {
   z-index: 9999;
@@ -104,4 +120,79 @@ main {
 
 footer {
   flex-shrink: 0;
+}
+
+/* Sidebar Overlay */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Desktop Layout (> 1024px) */
+@media (min-width: 1025px) {
+  .main-content {
+    margin-left: 250px;
+  }
+
+  .sidebar {
+    transform: none !important;
+  }
+}
+
+/* Tablet Layout (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .main-content {
+    margin-left: 0;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar-open .sidebar {
+    transform: translateX(0);
+  }
+
+  .sidebar-open .sidebar-overlay {
+    display: block;
+    opacity: 1;
+  }
+}
+
+/* Mobile Layout (< 768px) */
+@media (max-width: 767px) {
+  .main-content {
+    margin-left: 0;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+    width: 85%;
+    max-width: 300px;
+  }
+
+  .sidebar-open .sidebar {
+    transform: translateX(0);
+  }
+
+  .sidebar-open .sidebar-overlay {
+    display: block;
+    opacity: 1;
+  }
+
+  .sidebar-open body {
+    overflow: hidden;
+  }
 }

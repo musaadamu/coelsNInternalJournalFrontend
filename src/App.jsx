@@ -35,6 +35,10 @@ function App() {
 
   const storedUser = localStorage.getItem('authUser');
   const user = storedUser ? JSON.parse(storedUser) : null;
+  
+  // Debug user information
+  console.log('App.jsx - Stored User:', storedUser);
+  console.log('App.jsx - Parsed User:', user);
 
   const checkMobile = () => {
     setIsMobile(window.innerWidth <= 768);

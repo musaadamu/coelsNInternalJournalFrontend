@@ -104,35 +104,42 @@ const Sidebar = ({ className, onClose }) => {
             </Link>
           </li>
 
-          {/* Admin-only menu items */}
-          {isAdmin && (
-            <>
-              <li className="sidebar-menu-divider">Admin</li>
-              <li className="sidebar-menu-item">
-                <Link
-                  to="/manage-journals"
-                  className={`sidebar-menu-link ${activeLink === '/manage-journals' ? 'active' : ''}`}
-                >
-                  <i className="fas fa-tasks sidebar-icon"></i>
-                  <span>Manage Journals</span>
-                </Link>
-              </li>
-              <li className="sidebar-menu-item">
-                <Link
-                  to="/journals/uploads"
-                  className={`sidebar-menu-link ${activeLink === '/journals/uploads' ? 'active' : ''}`}
-                >
-                  <i className="fas fa-upload sidebar-icon"></i>
-                  <span>Upload Journals</span>
-                </Link>
-              </li>
-            </>
-          )}
+          {/* Admin menu items */}
+          <>
+            <li className="sidebar-menu-divider">Admin</li>
+            <li className="sidebar-menu-item">
+              <Link
+                to="/manage-journals"
+                className={`sidebar-menu-link ${activeLink === '/manage-journals' ? 'active' : ''}`}
+              >
+                <i className="fas fa-tasks sidebar-icon"></i>
+                <span>Manage Journals</span>
+              </Link>
+            </li>
+            <li className="sidebar-menu-item">
+              <Link
+                to="/journals/uploads"
+                className={`sidebar-menu-link ${activeLink === '/journals/uploads' ? 'active' : ''}`}
+              >
+                <i className="fas fa-upload sidebar-icon"></i>
+                <span>Upload Journals</span>
+              </Link>
+            </li>
+          </>
 
           {/* User menu items */}
           {user ? (
             <>
               <li className="sidebar-menu-divider">Account</li>
+              <li className="sidebar-menu-item">
+                <Link
+                  to="/submission"
+                  className={`sidebar-menu-link ${activeLink === '/submission' ? 'active' : ''}`}
+                >
+                  <i className="fas fa-paper-plane sidebar-icon"></i>
+                  <span>Submit Journal</span>
+                </Link>
+              </li>
               <li className="sidebar-menu-item">
                 <Link
                   to="/dashboard"

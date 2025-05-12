@@ -1,8 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import api from '../services/api';
+import { toast } from 'react-hot-toast';
+import api from '../api';
 import Navigation from '../components/Navigation.jsx';
+
+// Add Cloudinary URLs for direct access as a last resort
+const CLOUDINARY_PDF_URLS = [
+    'https://res.cloudinary.com/musaadamu/raw/upload/v1746729149/October-December_2023_Volume_2_Issue_4_Final_j8apca.pdf',
+    'https://res.cloudinary.com/musaadamu/raw/upload/v1746729149/October_2023_Volume_2_Issue_4_Final_Copy_jl6czk.pdf'
+];
+
+// Helper function to try all Cloudinary URLs as a last resort
+const tryAllCloudinaryUrls = async (title) => {
+    for (const url of CLOUDINARY_PDF_URLS) {
+        try {
+            const response = await fetch(url);
+            if (response.ok) {
+                return url;
+            }
+        } catch (error) {
+            console.error('Error trying Cloudinary URL:', error);
+        }
+    }
+    return null;
+};
 
 const JournalArchive = () => {
     const navigate = useNavigate();
@@ -98,17 +119,55 @@ const JournalArchive = () => {
         try {
             const toastId = toast.loading(`Preparing ${fileType.toUpperCase()} download...`);
             
-            // Get the base URL
-            const baseUrl = api.defaults.baseURL || 'https://coels-backend.onrender.com/api';
-            
-            // Create the direct download URL
-            const downloadUrl = `${baseUrl}/journals/${id}/direct-download/${fileType}`;
-            
-            // Open the URL in a new tab
-            window.open(downloadUrl, '_blank');
-            
-            toast.dismiss(toastId);
-            toast.success(`Opening ${fileType.toUpperCase()} file in new tab`);
+            // First try: Development environment - create blob and download
+            try {
+                const response = await api.journals.download(id, fileType);
+                const blob = new Blob([response.data], { 
+                    type: fileType === 'pdf' ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+                });
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', `journal-${id}.${fileType}`);
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                window.URL.revokeObjectURL(url);
+                toast.dismiss(toastId);
+                toast.success(`${fileType.toUpperCase()} downloaded successfully`);
+                return;
+            } catch (blobError) {
+                console.error('Blob download failed:', blobError);
+            }
+
+            // Second try: Production environment - direct URL approach
+            try {
+                const baseUrl = api.defaults.baseURL || 'https://coels-backend.onrender.com/api';
+                const downloadUrl = `${baseUrl}/journals/${id}/direct-download/${fileType}`;
+                window.open(downloadUrl, '_blank');
+                toast.dismiss(toastId);
+                toast.success(`Opening ${fileType.toUpperCase()} file in new tab`);
+                return;
+            } catch (directError) {
+                console.error('Direct download failed:', directError);
+            }
+
+            // Last resort: Try Cloudinary URLs for PDFs
+            if (fileType === 'pdf') {
+                const journal = journals.find(j => j._id === id);
+                if (journal) {
+                    const cloudinaryUrl = await tryAllCloudinaryUrls(journal.title);
+                    if (cloudinaryUrl) {
+                        window.open(cloudinaryUrl, '_blank');
+                        toast.dismiss(toastId);
+                        toast.success('Opening PDF from Cloudinary');
+                        return;
+                    }
+                }
+            }
+
+            // If all attempts fail
+            throw new Error('All download attempts failed');
         } catch (error) {
             console.error('Download error:', error);
             toast.error(`Error downloading file: ${error.message}`);
@@ -171,55 +230,67 @@ const JournalArchive = () => {
                             </div>
                         ) : (
                             filteredJournals.map(journal => (
-                                <div key={journal._id} className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                                    <div className="p-4">
-                                        <h2 
-                                            className="text-lg font-semibold text-blue-600 cursor-pointer hover:underline mb-2"
-                                            onClick={() => navigate(`/journals/${journal._id}`)}
-                                        >
-                                            {journal.title}
-                                        </h2>
-                                        
-                                        <p className="text-sm text-gray-600 mb-3 line-clamp-3">
-                                            {journal.abstract}
-                                        </p>
-                                        
-                                        <div className="flex items-center text-sm text-gray-500 mb-3">
-                                            <span className="mr-2">Authors:</span>
-                                            <span className="font-medium">
-                                                {journal.authors ? journal.authors.join(', ') : 'Unknown'}
-                                            </span>
+                                <div key={journal._id} className="border rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 bg-white">
+                                    <div className="p-6">
+                                        <div className="flex flex-col mb-4">
+                                            <h2 
+                                                className="text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors cursor-pointer mb-2"
+                                                onClick={() => navigate(`/journals/${journal._id}`)}
+                                            >
+                                                {journal.title}
+                                            </h2>
+                                            
+                                            <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
+                                                <span className="flex items-center gap-1">
+                                                    <i className="fas fa-calendar-alt"></i>
+                                                    {new Date(journal.createdAt).toLocaleDateString('en-US', {
+                                                        year: 'numeric',
+                                                        month: 'short',
+                                                        day: 'numeric'
+                                                    })}
+                                                </span>
+                                                <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                                                    journal.status === 'Published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                                                }`}>
+                                                    {journal.status || 'Draft'}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                                            <h3 className="text-sm font-semibold text-gray-700 mb-2">Abstract</h3>
+                                            <p className="text-sm text-gray-600 line-clamp-2">
+                                                {journal.abstract || 'No abstract available'}
+                                            </p>
                                         </div>
                                         
-                                        <div className="flex items-center justify-between mb-3">
-                                            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                                                journal.status === 'Published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                                            }`}>
-                                                {journal.status || 'Draft'}
-                                            </span>
-                                            <span className="text-xs text-gray-500">
-                                                {new Date(journal.createdAt).toLocaleDateString()}
-                                            </span>
+                                        <div className="bg-blue-50 rounded-lg p-4 mb-4">
+                                            <h3 className="text-sm font-semibold text-gray-700 mb-2">
+                                                <i className="fas fa-users mr-2"></i>Authors
+                                            </h3>
+                                            <p className="text-sm text-gray-600">
+                                                {Array.isArray(journal.authors) 
+                                                    ? journal.authors.join(', ')
+                                                    : typeof journal.authors === 'string'
+                                                        ? journal.authors
+                                                        : 'Unknown'}
+                                            </p>
                                         </div>
                                         
                                         <div className="flex flex-wrap gap-2 mt-4">
                                             <button
                                                 onClick={() => navigate(`/journals/${journal._id}`)}
-                                                className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+                                                className="flex-1 flex items-center justify-center px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
                                             >
+                                                <i className="fas fa-eye mr-2"></i>
                                                 View
                                             </button>
                                             <button
                                                 onClick={() => handleDownload(journal._id, 'pdf')}
-                                                className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors"
+                                                className="flex-1 flex items-center justify-center px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition-colors"
                                             >
+                                                <i className="fas fa-file-pdf mr-2"></i>
                                                 PDF
-                                            </button>
-                                            <button
-                                                onClick={() => handleDownload(journal._id, 'docx')}
-                                                className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
-                                            >
-                                                DOCX
                                             </button>
                                         </div>
                                     </div>

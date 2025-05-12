@@ -16,16 +16,35 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     console.log('Protected Route - Allowed Roles:', allowedRoles);
 
     const isAuthorized = useMemo(() => {
-        // If no roles are specified, allow access to authenticated users
-        if (!allowedRoles || allowedRoles.length === 0) return true;
+    // Enhanced debug logging
+    console.log('Protected Route Debug:', {
+      user: user,
+      allowedRoles: allowedRoles,
+      hasUser: !!user,
+      userRole: user?.role,
+      userFromStorage: JSON.parse(localStorage.getItem('authUser'))
+    });
+    
+    // If no roles are specified, allow access to authenticated users
+    if (!allowedRoles || allowedRoles.length === 0) {
+      console.log('No roles specified, allowing access');
+      return true;
+    }
 
-        // If user has no role, deny access to role-restricted routes
-        if (!user || !user.role) return false;
+    // If user has no role, deny access to role-restricted routes
+    if (!user || !user.role) {
+      console.log('No user or user role found, denying access');
+      return false;
+    }
 
-        // Check if user's role is in the allowed roles
-        const hasRole = allowedRoles.includes(user.role);
-        console.log('User role check:', user.role, 'is in allowed roles:', hasRole);
-        return hasRole;
+    // Check if user's role is in the allowed roles
+    const hasRole = allowedRoles.includes(user.role);
+    console.log('Role check result:', {
+      userRole: user.role,
+      allowedRoles: allowedRoles,
+      hasRole: hasRole
+    });
+    return hasRole;
     }, [user, allowedRoles]);
 
     if (loading) {
