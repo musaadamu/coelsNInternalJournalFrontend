@@ -65,41 +65,35 @@ const JournalDetail = () => {
 
             console.log(`Downloading ${fileType} file for journal ID:`, id);
 
-            // Try using the API service's download method which has built-in fallbacks
+            // Try using the API service's download method first
             try {
                 const response = await api.journals.download(id, fileType);
+                
+                // Create a blob and download link
+                const blob = new Blob([response.data], { type: `application/${fileType}` });
+                const blobUrl = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.setAttribute('download', `${journal?.title || 'journal'}.${fileType}`);
+                document.body.appendChild(link);
+                link.click();
 
-                // If we get a response, we can either:
-                // 1. Create a download link from the blob (works well in development)
-                if (process.env.NODE_ENV !== 'production') {
-                    // Create a download link
-                    const blobUrl = window.URL.createObjectURL(new Blob([response.data]));
-                    const link = document.createElement('a');
-                    link.href = blobUrl;
-                    link.setAttribute('download', `${journal?.title || 'journal'}.${fileType}`);
-                    document.body.appendChild(link);
-                    link.click();
+                // Clean up
+                setTimeout(() => {
+                    window.URL.revokeObjectURL(blobUrl);
+                    link.remove();
+                }, 100);
 
-                    // Clean up
-                    setTimeout(() => {
-                        window.URL.revokeObjectURL(blobUrl);
-                        link.remove();
-                    }, 100);
-
-                    toast.dismiss(toastId);
-                    toast.success(`File downloaded as ${fileType.toUpperCase()}`);
-                    return;
-                }
+                toast.dismiss(toastId);
+                toast.success(`File downloaded as ${fileType.toUpperCase()}`);
+                return;
             } catch (apiError) {
                 console.error('API download failed:', apiError);
                 // Continue to direct URL approach
             }
 
-            // Fallback to direct URL approach (works better in production)
-            // Get the base URL
+            // Fallback to direct URL approach
             const baseUrl = api.defaults.baseURL || 'https://coels-backend.onrender.com/api';
-
-            // Create the direct download URL
             const downloadUrl = `${baseUrl}/journals/${id}/direct-download/${fileType}`;
 
             console.log('Using direct download URL:', downloadUrl);
@@ -109,15 +103,16 @@ const JournalDetail = () => {
 
             toast.dismiss(toastId);
             toast.success(`Opening ${fileType.toUpperCase()} file in new tab`);
+
         } catch (err) {
             console.error(`Error downloading ${fileType} file:`, err);
             toast.error(`Failed to download ${fileType.toUpperCase()} file`);
 
-            // As a last resort, try using the Cloudinary URLs directly
+            // As a last resort for PDFs, try using the Cloudinary URLs directly
             if (fileType === 'pdf') {
                 try {
                     if (journal) {
-                        // Use the helper function to try all Cloudinary URLs
+                        toast.info('Attempting direct Cloudinary access...');
                         tryAllCloudinaryUrls(journal.title);
                     }
                 } catch (cloudinaryError) {

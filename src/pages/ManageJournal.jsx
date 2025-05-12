@@ -148,6 +148,7 @@ export default function ManageJournal() {
         navigate("/journals/uploads");
     };
 
+    // Handle journal downloads
     const handleDownload = async (id, fileType) => {
         try {
             // Show loading toast
@@ -155,42 +156,36 @@ export default function ManageJournal() {
 
             console.log(`Downloading ${fileType} file for journal ID:`, id);
 
-            // Try using the API service's download method which has built-in fallbacks
+            // Try using the API service's download method first
             try {
                 const response = await api.journals.download(id, fileType);
+                
+                // Create a blob and download link
+                const journal = journals.find(j => j._id === id);
+                const blob = new Blob([response.data], { type: `application/${fileType}` });
+                const blobUrl = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.setAttribute('download', `${journal?.title || 'journal'}.${fileType}`);
+                document.body.appendChild(link);
+                link.click();
 
-                // If we get a response, we can either:
-                // 1. Create a download link from the blob (works well in development)
-                if (process.env.NODE_ENV !== 'production') {
-                    // Create a download link
-                    const blobUrl = window.URL.createObjectURL(new Blob([response.data]));
-                    const link = document.createElement('a');
-                    const journal = journals.find(j => j._id === id);
-                    link.href = blobUrl;
-                    link.setAttribute('download', `${journal?.title || 'journal'}.${fileType}`);
-                    document.body.appendChild(link);
-                    link.click();
+                // Clean up
+                setTimeout(() => {
+                    window.URL.revokeObjectURL(blobUrl);
+                    link.remove();
+                }, 100);
 
-                    // Clean up
-                    setTimeout(() => {
-                        window.URL.revokeObjectURL(blobUrl);
-                        link.remove();
-                    }, 100);
-
-                    toast.dismiss(toastId);
-                    toast.success(`File downloaded as ${fileType.toUpperCase()}`);
-                    return;
-                }
+                toast.dismiss(toastId);
+                toast.success(`File downloaded as ${fileType.toUpperCase()}`);
+                return;
             } catch (apiError) {
                 console.error('API download failed:', apiError);
                 // Continue to direct URL approach
             }
 
-            // Fallback to direct URL approach (works better in production)
-            // Get the base URL
-            const baseUrl = api.defaults.baseURL || 'https://coelsn-backend.onrender.com/api';
-
-            // Create the direct download URL
+            // Fallback to direct URL approach
+            const baseUrl = api.defaults.baseURL || 'https://coels-backend.onrender.com/api';
             const downloadUrl = `${baseUrl}/journals/${id}/direct-download/${fileType}`;
 
             console.log('Using direct download URL:', downloadUrl);
@@ -200,17 +195,17 @@ export default function ManageJournal() {
 
             toast.dismiss(toastId);
             toast.success(`Opening ${fileType.toUpperCase()} file in new tab`);
+
         } catch (err) {
             console.error(`Error downloading ${fileType} file:`, err);
             toast.error(`Failed to download ${fileType.toUpperCase()} file`);
 
-            // As a last resort, try using the Cloudinary URLs directly
+            // As a last resort for PDFs, try using the Cloudinary URLs directly
             if (fileType === 'pdf') {
                 try {
-                    // Find the journal to get its title
                     const journal = journals.find(j => j._id === id);
                     if (journal) {
-                        // Use the helper function to try all Cloudinary URLs
+                        toast.info('Attempting direct Cloudinary access...');
                         tryAllCloudinaryUrls(journal.title);
                     }
                 } catch (cloudinaryError) {
@@ -272,49 +267,44 @@ export default function ManageJournal() {
         }
     };
 
+    // Handle submission downloads
     const handleSubmissionDownload = async (id, fileType) => {
         try {
             // Show loading toast
-            const toastId = toast.loading(`Preparing ${fileType.toUpperCase()} download...`);
+            const toastId = toast.loading(`Preparing submission ${fileType.toUpperCase()} download...`);
 
             console.log(`Downloading ${fileType} file for submission ID:`, id);
 
-            // Try using the API service's download method which has built-in fallbacks
+            // Try using the API service's download method first
             try {
                 const response = await api.submissions.download(id, fileType);
+                
+                // Create a blob and download link
+                const submission = submissions.find(s => s._id === id);
+                const blob = new Blob([response.data], { type: `application/${fileType}` });
+                const blobUrl = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.setAttribute('download', `${submission?.title || 'submission'}.${fileType}`);
+                document.body.appendChild(link);
+                link.click();
 
-                // If we get a response, we can either:
-                // 1. Create a download link from the blob (works well in development)
-                if (process.env.NODE_ENV !== 'production') {
-                    // Create a download link
-                    const blobUrl = window.URL.createObjectURL(new Blob([response.data]));
-                    const link = document.createElement('a');
-                    const submission = submissions.find(s => s._id === id);
-                    link.href = blobUrl;
-                    link.setAttribute('download', `${submission?.title || 'submission'}.${fileType}`);
-                    document.body.appendChild(link);
-                    link.click();
+                // Clean up
+                setTimeout(() => {
+                    window.URL.revokeObjectURL(blobUrl);
+                    link.remove();
+                }, 100);
 
-                    // Clean up
-                    setTimeout(() => {
-                        window.URL.revokeObjectURL(blobUrl);
-                        link.remove();
-                    }, 100);
-
-                    toast.dismiss(toastId);
-                    toast.success(`File downloaded as ${fileType.toUpperCase()}`);
-                    return;
-                }
+                toast.dismiss(toastId);
+                toast.success(`File downloaded as ${fileType.toUpperCase()}`);
+                return;
             } catch (apiError) {
                 console.error('API download failed:', apiError);
                 // Continue to direct URL approach
             }
 
-            // Fallback to direct URL approach (works better in production)
-            // Get the base URL
-            const baseUrl = api.defaults.baseURL || 'https://coelsn-backend.onrender.com/api';
-
-            // Create the direct download URL
+            // Fallback to direct URL approach
+            const baseUrl = api.defaults.baseURL || 'https://coels-backend.onrender.com/api';
             const downloadUrl = `${baseUrl}/submissions/${id}/direct-download/${fileType}`;
 
             console.log('Using direct download URL:', downloadUrl);
@@ -324,28 +314,12 @@ export default function ManageJournal() {
 
             toast.dismiss(toastId);
             toast.success(`Opening ${fileType.toUpperCase()} file in new tab`);
+
         } catch (err) {
             console.error(`Error downloading ${fileType} file:`, err);
             toast.error(`Failed to download ${fileType.toUpperCase()} file`);
 
-            // As a last resort, try using the Cloudinary URLs directly
-            const submission = submissions.find(s => s._id === id);
-            if (submission) {
-                try {
-                    // For DOCX files, try the stored Cloudinary URL if available
-                    if (fileType === 'docx' && submission.docxCloudinaryUrl) {
-                        toast.info(`Trying direct Cloudinary access as last resort...`);
-                        window.open(submission.docxCloudinaryUrl, '_blank');
-                    }
-                    // For PDF files, try our known Cloudinary URLs
-                    else if (fileType === 'pdf') {
-                        // Use the helper function to try all Cloudinary URLs
-                        tryAllCloudinaryUrls(submission.title);
-                    }
-                } catch (cloudinaryError) {
-                    console.error('Cloudinary direct access failed:', cloudinaryError);
-                }
-            }
+            // No Cloudinary fallback for submissions since they don't use it
         }
     };
 

@@ -39,7 +39,7 @@ const Sidebar = ({ className, onClose }) => {
   const isAdmin = user && user.role === 'admin';
 
   return (
-    <div className={`sidebar ${className || ''}`}>
+    <div className={`sidebar ${className || ''} ${mobile ? 'mobile' : ''}`}>
       <div className="sidebar-header">
         <Link to="/" className="sidebar-logo">
           <img src="/images/logo.png" alt="Sahara Journal Logo" className="sidebar-logo-img" />

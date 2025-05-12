@@ -5,6 +5,7 @@ import "./Navigation.css";
 const Navigation = ({ user, toggleSidebar }) => {
   const [scrolled, setScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -65,25 +66,81 @@ const Navigation = ({ user, toggleSidebar }) => {
           </NavLink>
         </div>
 
-        {!isMobile && (
-          <div className="nav-menu">
-            <div className="main-nav-links">
+        {isMobile ? (
+            <div className="nav-mobile-buttons">
+              <button
+                className="menu-toggle"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="Toggle menu"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 12h18M3 6h18M3 18h18"/>
+                </svg>
+              </button>
+              <button
+                className="sidebar-toggle"
+                onClick={toggleSidebar}
+                aria-label="Toggle sidebar"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 6h16M4 12h16m-7 6h7"/>
+                </svg>
+              </button>
+            </div>
+          ) : (
+            <div className="nav-menu">
+              <div className="main-nav-links">
+                {mainNavLinks.map((link) => (
+                  <NavLink key={link.to} to={link.to} className="nav-link">
+                    <div className="nav-text-container">
+                      <span className="nav-text-top">{link.topLine}</span>
+                      {link.bottomLine && <span className="nav-text-bottom">{link.bottomLine}</span>}
+                    </div>
+                  </NavLink>
+                ))}
+              </div>
+              <div className="user-nav-links">
+                {userNavLinks.map((link) => (
+                  <NavLink key={link.to} to={link.to} className="user-link">
+                    <div className="nav-text-container">
+                      <span className="nav-text-top">{link.topLine}</span>
+                      {link.bottomLine && <span className="nav-text-bottom">{link.bottomLine}</span>}
+                    </div>
+                  </NavLink>
+                ))}
+              </div>
+            </div>
+          )}
+
+        {isMobile && (
+          <div className={`nav-mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
+            <button
+              className="mobile-menu-close"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-label="Close menu"
+            >
+              <i className="fas fa-times"></i>
+            </button>
+            <div className="mobile-links">
               {mainNavLinks.map((link) => (
-                <NavLink key={link.to} to={link.to} className="nav-link">
-                  <div className="nav-text-container">
-                    <span className="nav-text-top">{link.topLine}</span>
-                    {link.bottomLine && <span className="nav-text-bottom">{link.bottomLine}</span>}
-                  </div>
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  className="mobile-link"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.label}
                 </NavLink>
               ))}
-            </div>
-            <div className="user-nav-links">
+              <div className="mobile-divider"></div>
               {userNavLinks.map((link) => (
-                <NavLink key={link.to} to={link.to} className="user-link">
-                  <div className="nav-text-container">
-                    <span className="nav-text-top">{link.topLine}</span>
-                    {link.bottomLine && <span className="nav-text-bottom">{link.bottomLine}</span>}
-                  </div>
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  className="mobile-link"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.label}
                 </NavLink>
               ))}
             </div>
