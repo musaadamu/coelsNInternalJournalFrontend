@@ -56,7 +56,7 @@ export default function HomePage() {
                     <main className="main-content">
                         {/* Journal Title */}
                         <div className="journal-title-container">
-                            <h1 className="journal-main-title">COELSN Journal of Interdisciplinary Academic Research and Development</h1>
+<h1 className="journal-main-title">Nigerian Journal of Science, Technology, Engineering and Mathematics Education (NJOSTEME)</h1>
                         </div>
 
                         {/* Carousel Caption Section */}
@@ -84,21 +84,21 @@ export default function HomePage() {
                         {/* Welcome Section - Modern Design */}
                         <div className="modern-welcome-container">
                             <div className="welcome-left">
-                                <motion.h2
+<motion.h2
                                     initial={{ opacity: 0, x: -30 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ duration: 0.8 }}
                                     className="welcome-heading"
                                 >
-                                    Welcome to the <span className="highlight">COELSN Journal</span>
+                                    Welcome to the <span className="highlight">Nigerian Journal of Science, Technology, Engineering and Mathematics Education (NJOSTEME)</span>
                                 </motion.h2>
-                                <motion.h3
+<motion.h3
                                     initial={{ opacity: 0, x: -30 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ duration: 0.8, delay: 0.2 }}
                                     className="welcome-subheading"
                                 >
-                                    of Interdisciplinary Academic Research and Development
+                                    of Science, Technology, Engineering and Mathematics Education
                                 </motion.h3>
                                 <motion.p
                                     initial={{ opacity: 0, x: -30 }}

@@ -60,8 +60,8 @@ const Navigation = ({ user, toggleSidebar }) => {
               className="nav-logo-image"
             />
             <div className="logo-text">
-              <span className="logo-title">COELSN Journal</span>
-              <span className="logo-subtitle">Interdisciplinary Academic Research</span>
+<span className="logo-title">Nigerian Journal of Science, Technology, Engineering and Mathematics Education (NJOSTEME)</span>
+<span className="logo-subtitle">Science, Technology, Engineering and Mathematics Education</span>
             </div>
           </NavLink>
         </div>

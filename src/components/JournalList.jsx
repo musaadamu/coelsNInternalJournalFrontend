@@ -280,7 +280,7 @@ const JournalList = () => {
         <div className="modern-journal-list-container">
             <div className="journal-list-header">
                 <h1>Discover Articles</h1>
-                <p>Explore the latest research from COELSN Journal of Interdisciplinary Academic Research and Development</p>
+<p>Explore the latest research from Nigerian Journal of Science, Technology, Engineering and Mathematics Education (NJOSTEME)</p>
             </div>
 
             {/* Search and Filter Section */}

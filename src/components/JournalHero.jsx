@@ -71,11 +71,11 @@ export default function JournalHero() {
                 animate="visible"
                 className="journal-hero__content"
             >
-                <motion.h1
+<motion.h1
                     variants={itemVariants}
                     className="journal-hero__title"
                 >
-                    Explore Cutting-Edge Research
+                    Explore Cutting-Edge Research from Nigerian Journal of Science, Technology, Engineering and Mathematics Education (NJOSTEME)
                 </motion.h1>
 
                 <motion.p
