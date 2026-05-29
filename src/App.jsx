@@ -27,6 +27,7 @@ import Guide from "./components/Guide.jsx";
 import Contact from "./components/Contact.jsx";
 import Footer from "./components/Footer.jsx";
 import Sidebar from "./components/Sidebar.jsx";
+import SidePanel from "./components/SidePanel.jsx";
 import TestComponent from "./components/TestComponent.jsx";
 
 function App() {
@@ -78,65 +79,70 @@ function App() {
         {/* Main Layout - Take remaining width */}
         <div className="flex flex-col min-h-screen flex-grow">
           {/* Navigation */}
-          <div className="fixed top-0 right-0 left-0 z-50 
-              md:left-64" // On medium+ screens, leave space for sidebar
-          >
-            <Navigation user={user} toggleSidebar={toggleSidebar} />
+          <Navigation user={user} toggleSidebar={toggleSidebar} />
+
+          {/* Page Content — flex row: [content] + [right side panel] */}
+          {/* pt accounts for: 40px utility bar + 90px branding bar + 80px nav = 210px total header */}
+          <div className="flex flex-row flex-grow pt-[220px]">
+
+            {/* Centre content area */}
+            <main className="flex-grow bg-white text-black px-6 pb-12 min-w-0">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/logout" element={<LogoutPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/forgotpassword" element={<ForgotPassword />} />
+                <Route path="/resetpassword/:token" element={<ResetPassword />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/guide" element={<Guide />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/journals" element={<JournalList />} />
+                <Route path="/journals/:id" element={<JournalDetail />} />
+                <Route path="/archive" element={<JournalArchive />} />
+                <Route path="/unauthorized" element={<Unauthorized />} />
+                <Route path="/test" element={<TestComponent />} />
+
+                {/* Protected */}
+                <Route path="/dashboard" element={
+                  <ProtectedRoute allowedRoles={["admin", "author", "user"]}>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }/>
+                <Route path="/updateprofile" element={
+                  <ProtectedRoute allowedRoles={["admin", "author", "user"]}>
+                    <UpdateProfilePage />
+                  </ProtectedRoute>
+                }/>
+                <Route path="/submission" element={
+                  <ProtectedRoute allowedRoles={["admin", "author", "user"]}>
+                    <JournalSubmission />
+                  </ProtectedRoute>
+                }/>
+
+                {/* Admin Only */}
+                <Route path="/journals/uploads" element={
+                  <ProtectedRoute allowedRoles={["admin"]}>
+                    <JournalUpload />
+                  </ProtectedRoute>
+                }/>
+                <Route path="/manage-journals" element={
+                  <ProtectedRoute allowedRoles={["admin"]}>
+                    <ManageJournal />
+                  </ProtectedRoute>
+                }/>
+
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+
+              {/* Footer */}
+              <Footer />
+            </main>
+
+            {/* Right-hand DAC Menu + Quick Links panel */}
+            <SidePanel />
+
           </div>
-
-          {/* Page Content */}
-          <main className="flex-grow pt-24 bg-white text-black px-6 pb-12 rounded-t-lg shadow-inner">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/logout" element={<LogoutPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/forgotpassword" element={<ForgotPassword />} />
-              <Route path="/resetpassword/:token" element={<ResetPassword />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/guide" element={<Guide />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/journals" element={<JournalList />} />
-              <Route path="/journals/:id" element={<JournalDetail />} />
-              <Route path="/archive" element={<JournalArchive />} />
-              <Route path="/unauthorized" element={<Unauthorized />} />
-              <Route path="/test" element={<TestComponent />} />
-
-              {/* Protected */}
-              <Route path="/dashboard" element={
-                <ProtectedRoute allowedRoles={["admin", "author", "user"]}>
-                  <Dashboard />
-                </ProtectedRoute>
-              }/>
-              <Route path="/updateprofile" element={
-                <ProtectedRoute allowedRoles={["admin", "author", "user"]}>
-                  <UpdateProfilePage />
-                </ProtectedRoute>
-              }/>
-              <Route path="/submission" element={
-                <ProtectedRoute allowedRoles={["admin", "author", "user"]}>
-                  <JournalSubmission />
-                </ProtectedRoute>
-              }/>
-
-              {/* Admin Only */}
-              <Route path="/journals/uploads" element={
-                <ProtectedRoute allowedRoles={["admin"]}>
-                  <JournalUpload />
-                </ProtectedRoute>
-              }/>
-              <Route path="/manage-journals" element={
-                <ProtectedRoute allowedRoles={["admin"]}>
-                  <ManageJournal />
-                </ProtectedRoute>
-              }/>
-
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-
-            {/* Footer */}
-            <Footer />
-          </main>
         </div>
 
         {/* Toast Notifications */}

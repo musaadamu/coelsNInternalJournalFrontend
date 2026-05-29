@@ -1,0 +1,175 @@
+/* SidePanel.css — Right-hand DAC Menu & Quick Links panel */
+
+/* ── Panel Container ────────────────────────────────────────────────────── */
+.side-panel {
+  width: 230px;
+  min-width: 230px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem 0.75rem 2rem;
+  position: sticky;
+  top: 220px; /* sits just below the 3-bar header */
+  height: calc(100vh - 220px);
+  overflow-y: auto;
+  background: transparent;
+  border-left: 1px solid #e2e8f0;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.side-panel::-webkit-scrollbar {
+  width: 4px;
+}
+.side-panel::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+/* ── Widget Box ─────────────────────────────────────────────────────────── */
+.sp-widget {
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  overflow: hidden;
+  border: 1px solid #e8edf3;
+  transition: box-shadow 0.2s ease;
+}
+
+.sp-widget:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* ── Widget Header (Collapsible Toggle) ─────────────────────────────────── */
+.sp-widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: linear-gradient(135deg, #1a365d 0%, #2d5282 100%);
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  padding: 0.7rem 1rem;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  text-align: left;
+  transition: background 0.2s ease;
+}
+
+.sp-widget-header:hover {
+  background: linear-gradient(135deg, #153152 0%, #244774 100%);
+}
+
+.sp-widget-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+}
+
+.sp-chevron {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.75);
+  transition: transform 0.25s ease;
+  display: inline-block;
+}
+
+.sp-chevron.open {
+  transform: rotate(180deg);
+}
+
+/* ── Widget Body ────────────────────────────────────────────────────────── */
+.sp-widget-body {
+  padding: 0.4rem 0;
+  background: #ffffff;
+}
+
+/* ── Link List ──────────────────────────────────────────────────────────── */
+.sp-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sp-list-item {
+  border-bottom: 1px solid #f0f4f8;
+}
+
+.sp-list-item:last-child {
+  border-bottom: none;
+}
+
+/* ── Individual Link ────────────────────────────────────────────────────── */
+.sp-link {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  color: #2d3748;
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1.4;
+  transition: background-color 0.15s ease, color 0.15s ease, border-left-color 0.15s ease;
+  border-left: 3px solid transparent;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+.sp-link:hover {
+  background-color: #ebf4ff;
+  color: #1a365d;
+  border-left-color: #3182ce;
+}
+
+.sp-link.active {
+  background-color: #e6f0fd;
+  color: #1a365d;
+  border-left-color: #f59e0b;
+  font-weight: 600;
+}
+
+.sp-icon {
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+  line-height: 1;
+}
+
+.sp-label {
+  flex: 1;
+}
+
+.sp-external-arrow {
+  font-size: 0.7rem;
+  color: #a0aec0;
+  flex-shrink: 0;
+  margin-top: 1px;
+  transition: color 0.15s ease;
+}
+
+.sp-link:hover .sp-external-arrow {
+  color: #3182ce;
+}
+
+/* ── Responsive — hide on narrow viewports ──────────────────────────────── */
+@media (max-width: 1280px) {
+  .side-panel {
+    width: 200px;
+    min-width: 200px;
+    padding: 1rem 0.5rem 2rem;
+  }
+
+  .sp-link {
+    font-size: 0.78rem;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  /* Collapse to a floating drawer on tablet / mobile */
+  .side-panel {
+    display: none;
+  }
+}
